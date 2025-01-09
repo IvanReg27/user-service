@@ -17,6 +17,6 @@ public class UserService {
 
     public User findByLogin(String login) {
         return userRepository.findByLogin(login)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
     }
 }
