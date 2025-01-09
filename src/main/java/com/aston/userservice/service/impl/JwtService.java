@@ -1,4 +1,4 @@
-package com.aston.userservice.service;
+package com.aston.userservice.service.impl;
 
 import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.security.JwtAuthentication;

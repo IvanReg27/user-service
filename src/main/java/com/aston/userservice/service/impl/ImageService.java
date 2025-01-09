@@ -1,4 +1,4 @@
-package com.aston.userservice.service;
+package com.aston.userservice.service.impl;
 
 import com.aston.userservice.domain.response.SimpleMessage;
 import lombok.extern.slf4j.Slf4j;

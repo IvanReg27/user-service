@@ -1,7 +1,7 @@
 package com.aston.userservice.controller;
 
 import com.aston.userservice.domain.response.SimpleMessage;
-import com.aston.userservice.service.ImageService;
+import com.aston.userservice.service.impl.ImageService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;

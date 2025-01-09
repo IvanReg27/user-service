@@ -1,9 +1,10 @@
-package com.aston.userservice.service;
+package com.aston.userservice.service.impl;
 
 import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.request.AuthRequest;
 import com.aston.userservice.domain.response.JwtResponse;
 import com.aston.userservice.exception.AuthException;
+import com.aston.userservice.service.UserService;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
