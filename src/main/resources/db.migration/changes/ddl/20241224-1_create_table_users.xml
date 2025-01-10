@@ -44,7 +44,7 @@
     </changeSet>
 
     <changeSet id="20241224-1_create_table_users_roles" author="i.makhorin">
-        <createTable tableName="users_roles">
+        <createTable tableName="user_roles">
             <column name="user_id" type="UUID">
                 <constraints nullable="false"/>
             </column>

@@ -2,6 +2,8 @@ server:
   port: 8082
 
 spring:
+  jpa:
+    show-sql: true
   datasource:
     url: jdbc:postgresql://${PSQL_DATASOURCE_URL:localhost}:5434/UserDB
     username: ${PSQL_DATASOURCE_USERNAME:postgres}

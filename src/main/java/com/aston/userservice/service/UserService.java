@@ -5,7 +5,7 @@ import com.aston.userservice.domain.entity.User;
 /**
  * Интерфейс для работы с с пользователем
  */
-public interface UserService {
+public interface  UserService {
 
     /**
      * Метод для получения пользователя по логину
