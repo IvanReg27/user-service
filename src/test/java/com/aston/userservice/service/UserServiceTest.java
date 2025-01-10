@@ -1,12 +1,15 @@
 package com.aston.userservice.service;
 
 import com.aston.userservice.domain.entity.User;
-import com.aston.userservice.integration.config.IntegrationTest;
+import com.aston.userservice.integration.IntegrationTest;
 import com.aston.userservice.repository.UserRepository;
 import com.aston.userservice.security.Role;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -17,11 +20,11 @@ class UserServiceTest {
 
     @Autowired
     private UserService userService;
-    private String LOGIN_NAME = "ivan";
+    private final String LOGIN_NAME = "ivan";
 
     @Autowired
     private UserRepository userRepository;
-    private User user = User.builder()
+    private final User user = User.builder()
             .firstName("Иван")
             .lastName("Петров")
             .birthday(LocalDate.of(1990, 01, 01))
@@ -32,6 +35,9 @@ class UserServiceTest {
             .password("password1")
             .roles(new HashSet<>(List.of(Role.USER, Role.ADMIN)))
             .build();
+    @Container
+    @ServiceConnection
+    static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:15");
 
     @Test
     void findByLogin() {
