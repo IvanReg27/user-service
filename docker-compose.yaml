@@ -1,23 +1,13 @@
-version: "3"
+version: '3.9'
 
 services:
-  credit-service:
-    container_name: $CI_PROJECT_NAME
-    image: $AND_DOCKER_REGISTRY_NAME/$PROGECT-$APP:$CI_COMMIT_SHA
-    ports:
-      - 9002:8080
+  db:
+    image: postgres:15
+    container_name: postgres-local
     restart: always
-    volumes:
-      - /logs/credit:/logs
-    networks:
-      - a-tink-test
-    deploy:
-      resources:
-        limits:
-          cpus: "0.5"
-          memory: "512M"
-
-networks:
-  a-tink-test:
-    external: true
-    driver: bridge
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: UserDB
+    ports:
+      - "5434:5432"
