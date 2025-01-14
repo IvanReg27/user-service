@@ -3,7 +3,7 @@ package com.aston.userservice.service;
 import com.aston.userservice.domain.entity.User;
 
 /**
- * Интерфейс для работы с с пользователем
+ * Интерфейс для работы с пользователем
  */
 public interface  UserService {
 
