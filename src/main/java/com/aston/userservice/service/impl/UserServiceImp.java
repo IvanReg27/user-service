@@ -1,11 +1,14 @@
 package com.aston.userservice.service.impl;
 
 import com.aston.userservice.domain.entity.User;
+import com.aston.userservice.domain.response.UserRequisitesResponseDTO;
 import com.aston.userservice.exception.UserNotFoundException;
 import com.aston.userservice.repository.UserRepository;
 import com.aston.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 /**
  * Класс для работы с пользователем
@@ -20,5 +23,10 @@ public class UserServiceImp implements UserService {
     public User findByLogin(String login) {
         return userRepository.findByLogin(login)
                 .orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
+    }
+
+    @Override
+    public User findRequisitesByIdUser(UUID id, UserRequisitesResponseDTO userRequisitesResponseDTO) {
+        return null;
     }
 }
