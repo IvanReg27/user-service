@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     /**
      * Метод для получения пользователя по login
      *
-     * @param login login карты
+     * @param login login пользователя
      * @return пользователь с заданным login
      */
     Optional<User> findByLogin(String login);

@@ -21,9 +21,8 @@ public interface  UserService {
     /**
      * Метод для получения необходимых реквизитов счета по id пользователя
      *
-     * @param id id пользователя
-     * @param userRequisitesResponseDTO DTO запроса на получение реквизитов
+     * @param userId userId пользователя
      * @return реквизиты
      */
-    User findRequisitesByIdUser(UUID id, UserRequisitesResponseDTO userRequisitesResponseDTO);
+    UserRequisitesResponseDTO getUserRequisitesById(UUID userId);
 }
