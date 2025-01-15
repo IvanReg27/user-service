@@ -32,15 +32,13 @@ public class UserServiceImp implements UserService {
     @Override
     public UserRequisitesResponseDTO getUserRequisitesById(UUID userId) {
 
-            // Находим реквизиты пользователя
-            Requisites requisites = requisitesRepository.findByUserId(userId)
-                    .orElseThrow(() -> new EntityNotFoundException("Реквизиты не найдены по id пользователя: " + userId));
+        Requisites requisites = requisitesRepository.findByUserId(userId)
+                .orElseThrow(() -> new EntityNotFoundException("Реквизиты не найдены по id пользователя: " + userId));
 
-            // Создаем и возвращаем DTO
-            return UserRequisitesResponseDTO.builder()
-                    .firstName(requisites.getUser().getFirstName())
-                    .accountNumber(requisites.getAccountNumber())
-                    .kbk(requisites.getKbk())
-                    .build();
-        }
+        return UserRequisitesResponseDTO.builder()
+                .firstName(requisites.getUser().getFirstName())
+                .accountNumber(requisites.getAccountNumber())
+                .kbk(requisites.getKbk())
+                .build();
     }
+}

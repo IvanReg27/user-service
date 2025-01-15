@@ -5,6 +5,7 @@ import com.aston.userservice.domain.response.UserRequisitesResponseDTO;
 import com.aston.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
@@ -13,10 +14,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserControllerImpl implements UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Override
-    public ResponseEntity<UserRequisitesResponseDTO> getUserRequisites(UUID id) {
+    public ResponseEntity<UserRequisitesResponseDTO> getUserRequisites(@PathVariable UUID id) {
         return ResponseEntity.ok(userService.getUserRequisitesById(id));
     }
 }
