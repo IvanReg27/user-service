@@ -15,22 +15,22 @@
             <column name="id" type="INTEGER">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="account_number" type="NUMERIC(30)">
+            <column name="account_number" type="CHAR(30)">
                 <constraints nullable="false"/>
             </column>
-            <column name="bik" type="NUMERIC(10)">
+            <column name="bik" type="CHAR(10)">
                 <constraints nullable="false"/>
             </column>
-            <column name="correspondent_check" type="NUMERIC(20)">
+            <column name="correspondent_check" type="CHAR(20)">
                 <constraints nullable="false"/>
             </column>
-            <column name="inn" type="NUMERIC(10)">
+            <column name="inn" type="CHAR(10)">
                 <constraints nullable="false"/>
             </column>
-            <column name="kpp" type="NUMERIC(9)">
+            <column name="kpp" type="CHAR(9)">
                 <constraints nullable="false"/>
             </column>
-            <column name="kbk" type="NUMERIC(20)">
+            <column name="kbk" type="CHAR(20)">
                 <constraints nullable="false"/>
             </column>
             <column name="user_id" type="UUID">

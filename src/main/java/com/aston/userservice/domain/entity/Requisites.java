@@ -14,8 +14,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigInteger;
-
 /**
  * Класс сущность, соответствующий таблице Requisites в UserDB
  */
@@ -33,22 +31,22 @@ public class Requisites {
     private Integer id;
 
     @Column(name = "account_number", nullable = false, length = 30)
-    private BigInteger accountNumber;
+    private String accountNumber;
 
     @Column(name = "bik", nullable = false, length = 10)
-    private Integer bik;
+    private String bik;
 
     @Column(name = "correspondent_check", nullable = false, length = 20)
-    private BigInteger correspondentCheck;
+    private String correspondentCheck;
 
     @Column(name = "inn", nullable = false, length = 10)
-    private Integer inn;
+    private String inn;
 
     @Column(name = "kpp", nullable = false, length = 9)
-    private Integer kpp;
+    private String kpp;
 
     @Column(name = "kbk", nullable = false, length = 20)
-    private BigInteger kbk;
+    private String kbk;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
