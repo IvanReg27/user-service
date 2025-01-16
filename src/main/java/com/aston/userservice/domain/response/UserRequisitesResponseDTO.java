@@ -8,5 +8,5 @@ import java.math.BigInteger;
  * DTO для направления реквизитов пользователя
  */
 @Builder
-public record UserRequisitesResponseDTO(String firstName, BigInteger accountNumber, BigInteger kbk) {
+public record UserRequisitesResponseDTO(String firstName, String accountNumber, String kbk) {
 }

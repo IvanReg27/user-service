@@ -32,7 +32,7 @@ public class UserServiceImp implements UserService {
     @Override
     public User findByLogin(String login) {
         return userRepository.findByLogin(login)
-                .orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
+                .orElseThrow(() -> new UserNotFoundException("Пользователь не найден  по логину: " + login));
     }
 
     /**
@@ -45,7 +45,7 @@ public class UserServiceImp implements UserService {
     public UserRequisitesResponseDTO getUserRequisitesById(UUID userId) {
 
         Requisites requisites = requisitesRepository.findByUserId(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Реквизиты не найдены по id пользователя: " + userId));
+                .orElseThrow(() -> new EntityNotFoundException("Реквизиты счета не найдены по id пользователя: " + userId));
 
         return UserRequisitesResponseDTO.builder()
                 .firstName(requisites.getUser().getFirstName())
