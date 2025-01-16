@@ -5,7 +5,7 @@ import lombok.Builder;
 import java.math.BigInteger;
 
 /**
- * DTO для направления необходимых реквизитов пользователя
+ * DTO для направления реквизитов пользователя
  */
 @Builder
 public record UserRequisitesResponseDTO(String firstName, BigInteger accountNumber, BigInteger kbk) {

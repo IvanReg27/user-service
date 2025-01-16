@@ -1,6 +1,6 @@
 package com.aston.userservice.service;
 
-import com.aston.userservice.constants.TestConstants;
+import com.aston.userservice.constants.TestConstantsUser;
 import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.integration.cofig.IntegrationTest;
 import com.aston.userservice.integration.cofig.PostgresTestContainer;
@@ -20,8 +20,8 @@ class UserServiceTest extends PostgresTestContainer {
 
     @Test
     void findByLogin() {
-        User savedUser = userRepository.save(TestConstants.USER);
-        User ivan = userService.findByLogin(TestConstants.LOGIN_NAME);
+        User savedUser = userRepository.save(TestConstantsUser.USER);
+        User ivan = userService.findByLogin(TestConstantsUser.LOGIN_NAME);
         Assertions.assertEquals(savedUser.getLogin(), ivan.getLogin());
     }
 }

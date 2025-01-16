@@ -19,7 +19,7 @@ public interface  UserService {
     User findByLogin(String login);
 
     /**
-     * Метод для получения необходимых реквизитов счета по id пользователя
+     * Метод для получения реквизитов счета по id пользователя
      *
      * @param userId userId пользователя
      * @return реквизиты

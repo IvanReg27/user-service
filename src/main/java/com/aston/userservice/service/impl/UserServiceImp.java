@@ -23,12 +23,24 @@ public class UserServiceImp implements UserService {
     private final UserRepository userRepository;
     private final RequisitesRepository requisitesRepository;
 
+    /**
+     * Метод для получения пользователя по логину
+     *
+     * @param login login
+     * @return пользователь
+     */
     @Override
     public User findByLogin(String login) {
         return userRepository.findByLogin(login)
                 .orElseThrow(() -> new UserNotFoundException("Пользователь не найден"));
     }
 
+    /**
+     * Метод для получения реквизитов счета по id пользователя
+     *
+     * @param userId userId
+     * @return реквизиты счета
+     */
     @Override
     public UserRequisitesResponseDTO getUserRequisitesById(UUID userId) {
 
