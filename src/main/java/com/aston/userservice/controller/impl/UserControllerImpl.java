@@ -1,6 +1,7 @@
 package com.aston.userservice.controller.impl;
 
 import com.aston.userservice.controller.UserController;
+import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.response.UserRequisitesResponseDTO;
 import com.aston.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,11 @@ import java.util.UUID;
 public class UserControllerImpl implements UserController {
 
     private final UserService userService;
+
+    @Override
+    public ResponseEntity<User> getUser(@PathVariable String login) {
+        return ResponseEntity.ok(userService.findByLogin(login));
+    }
 
     @Override
     public ResponseEntity<UserRequisitesResponseDTO> getUserRequisites(@PathVariable UUID id) {
