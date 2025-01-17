@@ -36,7 +36,7 @@ class UserServiceTest extends PostgresTestContainer {
     }
 
     @Test
-    // @Transactional для загрузки связанной сущности user(по user_id) в одной сессии, иначи ошибка
+    // @Transactional для загрузки связанной сущности user(по user_id) в одной сессии, иначе ошибка
     @Transactional
     void getUserRequisitesById() {
         User savedUser = userRepository.save(TestConstantsUser.USER);
