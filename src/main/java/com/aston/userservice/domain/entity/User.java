@@ -34,32 +34,23 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "first_name", nullable = false, length = 30)
     private String firstName;
 
-    @Column(name = "last_name", nullable = false, length = 30)
     private String lastName;
 
-    @Column(name = "birthday", nullable = false)
     private LocalDate birthday;
 
-    @Column(name = "INN", nullable = false, length = 12)
     private String inn;
 
-    @Column(name = "SNILS", nullable = false, length = 11)
     private String snils;
 
-    @Column(name = "passport_number", nullable = false, length = 10)
     private String passportNumber;
 
-    @Column(name = "login", nullable = false, length = 12, unique = true)
     private String login;
 
-    @Column(name = "password", nullable = false, length = 12)
     private String password;
 
     @Column(name = "role", nullable = false, length = 15)

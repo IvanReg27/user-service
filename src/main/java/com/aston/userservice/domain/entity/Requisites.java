@@ -28,26 +28,19 @@ import java.util.UUID;
 public class Requisites {
 
     @Id
-    @Column(name = "id", nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(name = "account_number", nullable = false, length = 30)
     private String accountNumber;
 
-    @Column(name = "bik", nullable = false, length = 10)
     private String bik;
 
-    @Column(name = "correspondent_check", nullable = false, length = 20)
     private String correspondentCheck;
 
-    @Column(name = "inn", nullable = false, length = 10)
     private String inn;
 
-    @Column(name = "kpp", nullable = false, length = 9)
     private String kpp;
 
-    @Column(name = "kbk", nullable = false, length = 20)
     private String kbk;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
