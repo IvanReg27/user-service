@@ -1,7 +1,6 @@
 package com.aston.userservice.repository;
 
 import com.aston.userservice.domain.entity.Requisites;
-import com.aston.userservice.domain.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

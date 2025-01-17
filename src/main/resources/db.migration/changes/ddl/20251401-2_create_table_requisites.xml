@@ -12,7 +12,7 @@
         </preConditions>
 
         <createTable tableName="requisites">
-            <column name="id" type="INTEGER">
+            <column name="id" type="UUID">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="account_number" type="CHAR(30)">

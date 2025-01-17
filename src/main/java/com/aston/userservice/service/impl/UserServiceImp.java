@@ -32,7 +32,7 @@ public class UserServiceImp implements UserService {
     @Override
     public User findByLogin(String login) {
         return userRepository.findByLogin(login)
-                .orElseThrow(() -> new UserNotFoundException("Пользователь не найден  по логину: " + login));
+                .orElseThrow(() -> new UserNotFoundException("Пользователь не найден по логину: " + login));
     }
 
     /**
