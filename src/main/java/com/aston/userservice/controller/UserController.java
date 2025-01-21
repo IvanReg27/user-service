@@ -1,7 +1,7 @@
 package com.aston.userservice.controller;
 
-import com.aston.userservice.domain.entity.User;
-import com.aston.userservice.domain.response.UserRequisitesResponseDTO;
+import com.aston.userservice.domain.projection.UserProjection;
+import com.aston.userservice.domain.projection.UserRequisitesProjection;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,17 +19,17 @@ public interface UserController {
      * Метод для получения информации о пользователе по login
      *
      * @param login login пользователя
-     * @return Информацию о пользователе {@link User}
+     * @return Информацию о пользователе {@link UserProjection}
      */
     @GetMapping("/user/{login}")
-    public ResponseEntity<User> getUser(@PathVariable String login);
+    public ResponseEntity<UserProjection> getUser(@PathVariable String login);
 
     /**
      * Метод для получения информации о счете по id пользователя
      *
      * @param id id пользователя
-     * @return Информацию о счете {@link UserRequisitesResponseDTO}
+     * @return Информацию о счете {@link UserRequisitesProjection}
      */
     @GetMapping("/requisites/{id}")
-    public ResponseEntity<UserRequisitesResponseDTO> getUserRequisites(@PathVariable UUID id);
+    public ResponseEntity<UserRequisitesProjection> getUserRequisites(@PathVariable UUID id);
 }

@@ -1,6 +1,7 @@
 package com.aston.userservice.repository;
 
 import com.aston.userservice.domain.entity.Requisites;
+import com.aston.userservice.domain.projection.UserRequisitesProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ import java.util.UUID;
  * @see Requisites
  */
 @Repository
-public interface RequisitesRepository extends JpaRepository<Requisites, Integer> {
+public interface RequisitesRepository extends JpaRepository<Requisites, UUID> {
 
     /**
      * Метод для получения пользователя по id
@@ -21,5 +22,5 @@ public interface RequisitesRepository extends JpaRepository<Requisites, Integer>
      * @param userId userId пользователя
      * @return пользователь с заданным id
      */
-    Optional<Requisites> findByUserId(UUID userId);
+    Optional<UserRequisitesProjection> findByUserId(UUID userId);
 }

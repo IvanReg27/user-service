@@ -1,8 +1,8 @@
 package com.aston.userservice.service.impl;
 
-import com.aston.userservice.domain.entity.Requisites;
-import com.aston.userservice.domain.entity.User;
-import com.aston.userservice.domain.response.UserRequisitesResponseDTO;
+import com.aston.userservice.domain.projection.UserProjection;
+import com.aston.userservice.domain.projection.UserRequisitesProjection;
+import com.aston.userservice.exception.RequisitesNotFoundException;
 import com.aston.userservice.exception.UserNotFoundException;
 import com.aston.userservice.repository.RequisitesRepository;
 import com.aston.userservice.repository.UserRepository;
@@ -30,9 +30,10 @@ public class UserServiceImp implements UserService {
      * @return пользователь
      */
     @Override
-    public User findByLogin(String login) {
+    public UserProjection findByLogin(String login) {
         return userRepository.findByLogin(login)
-                .orElseThrow(() -> new UserNotFoundException("Пользователь не найден по логину: " + login));
+                .orElseThrow(() -> new UserNotFoundException(
+                        "Пользователь не найден по логину: " + login));
     }
 
     /**
@@ -42,15 +43,9 @@ public class UserServiceImp implements UserService {
      * @return реквизиты счета
      */
     @Override
-    public UserRequisitesResponseDTO getUserRequisitesById(UUID userId) {
-
-        Requisites requisites = requisitesRepository.findByUserId(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Реквизиты счета не найдены по id пользователя: " + userId));
-
-        return UserRequisitesResponseDTO.builder()
-                .firstName(requisites.getUser().getFirstName())
-                .accountNumber(requisites.getAccountNumber())
-                .kbk(requisites.getKbk())
-                .build();
+    public UserRequisitesProjection getUserRequisitesById(UUID userId) {
+        return requisitesRepository.findByUserId(userId)
+                .orElseThrow(() -> new RequisitesNotFoundException(String.format(
+                        "Реквизиты счета не найдены по id пользователя: " + userId.toString())));
     }
 }

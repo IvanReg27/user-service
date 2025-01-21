@@ -1,7 +1,7 @@
 package com.aston.userservice.service;
 
-import com.aston.userservice.domain.entity.User;
-import com.aston.userservice.domain.response.UserRequisitesResponseDTO;
+import com.aston.userservice.domain.projection.UserProjection;
+import com.aston.userservice.domain.projection.UserRequisitesProjection;
 
 import java.util.UUID;
 
@@ -16,7 +16,7 @@ public interface  UserService {
      * @param login login пользователя
      * @return пользователь
      */
-    User findByLogin(String login);
+    UserProjection findByLogin(String login);
 
     /**
      * Метод для получения реквизитов счета по id пользователя
@@ -24,5 +24,5 @@ public interface  UserService {
      * @param userId userId пользователя
      * @return реквизиты
      */
-    UserRequisitesResponseDTO getUserRequisitesById(UUID userId);
+    UserRequisitesProjection getUserRequisitesById(UUID userId);
 }

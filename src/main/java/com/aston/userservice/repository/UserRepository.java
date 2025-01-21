@@ -1,6 +1,7 @@
 package com.aston.userservice.repository;
 
 import com.aston.userservice.domain.entity.User;
+import com.aston.userservice.domain.projection.UserProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +11,7 @@ import java.util.UUID;
 /**
  * Интерфейс репозитория для работы с пользователем
  *
- * @see User
+ * @see UserProjection
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
@@ -21,5 +22,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
      * @param login login пользователя
      * @return пользователь с заданным login
      */
-    Optional<User> findByLogin(String login);
+    Optional<UserProjection> findByLogin(String login);
 }

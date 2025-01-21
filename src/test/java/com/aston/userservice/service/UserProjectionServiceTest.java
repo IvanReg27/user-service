@@ -4,7 +4,8 @@ import com.aston.userservice.constants.TestConstantsRequisites;
 import com.aston.userservice.constants.TestConstantsUser;
 import com.aston.userservice.domain.entity.Requisites;
 import com.aston.userservice.domain.entity.User;
-import com.aston.userservice.domain.response.UserRequisitesResponseDTO;
+import com.aston.userservice.domain.projection.UserProjection;
+import com.aston.userservice.domain.projection.UserRequisitesProjection;
 import com.aston.userservice.integration.cofig.IntegrationTest;
 import com.aston.userservice.integration.cofig.PostgresTestContainer;
 import com.aston.userservice.repository.RequisitesRepository;
@@ -30,7 +31,7 @@ class UserServiceTest extends PostgresTestContainer {
     @Test
     void findByLogin() {
         User savedUser = userRepository.save(TestConstantsUser.USER);
-        User ivan = userService.findByLogin(TestConstantsUser.LOGIN_NAME);
+        UserProjection ivan = userService.findByLogin(TestConstantsUser.LOGIN_NAME);
 
         Assertions.assertEquals(savedUser.getLogin(), ivan.getLogin());
     }
@@ -44,19 +45,26 @@ class UserServiceTest extends PostgresTestContainer {
                 .user(savedUser)
                 .build();
         requisites = requisitesRepository.save(requisites);
-        UserRequisitesResponseDTO response = userService.getUserRequisitesById(savedUser.getId());
 
-        Assertions.assertNotNull(response);
-        Assertions.assertEquals(requisites.getAccountNumber(), response.accountNumber());
-        Assertions.assertEquals(requisites.getKbk(), response.kbk());
-        Assertions.assertEquals(savedUser.getFirstName(), response.firstName());
+        String expectedAccountNumber = requisites.getAccountNumber();
+        String expectedKbk = requisites.getKbk();
+        String expectedFirstName = savedUser.getFirstName();
+
+        UserRequisitesProjection response = userService.getUserRequisitesById(savedUser.getId());
+
+        Assertions.assertAll(
+                "Проверка полей проекции UserRequisitesProjection",
+                () -> Assertions.assertNotNull(response, "Response не должен быть null"),
+                () -> Assertions.assertEquals(expectedAccountNumber, response.getAccountNumber(), "Неверный номер счета"),
+                () -> Assertions.assertEquals(expectedKbk, response.getKbk(), "Неверный KBK"),
+                () -> Assertions.assertEquals(expectedFirstName, response.getFirstName(), "Неверное имя пользователя")
+        );
     }
 
     @Test
     void getUserRequisitesByIdThrowsExceptionIfNotFound() {
         UUID nonExistentUserId = UUID.randomUUID();
 
-        // Проверка, что выбрасывается исключение, если реквизиты не найдены
         EntityNotFoundException exception = Assertions.assertThrows(
                 EntityNotFoundException.class,
                 () -> userService.getUserRequisitesById(nonExistentUserId)
