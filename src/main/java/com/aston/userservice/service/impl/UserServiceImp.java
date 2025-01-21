@@ -7,7 +7,6 @@ import com.aston.userservice.exception.UserNotFoundException;
 import com.aston.userservice.repository.RequisitesRepository;
 import com.aston.userservice.repository.UserRepository;
 import com.aston.userservice.service.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +21,7 @@ public class UserServiceImp implements UserService {
 
     private final UserRepository userRepository;
     private final RequisitesRepository requisitesRepository;
+
 
     /**
      * Метод для получения пользователя по логину

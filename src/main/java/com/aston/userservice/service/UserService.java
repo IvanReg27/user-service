@@ -8,7 +8,7 @@ import java.util.UUID;
 /**
  * Интерфейс для работы с пользователем
  */
-public interface  UserService {
+public interface UserService {
 
     /**
      * Метод для получения пользователя по логину

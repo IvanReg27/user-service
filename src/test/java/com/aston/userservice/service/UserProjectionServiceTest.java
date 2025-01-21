@@ -6,11 +6,11 @@ import com.aston.userservice.domain.entity.Requisites;
 import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;
+import com.aston.userservice.exception.RequisitesNotFoundException;
 import com.aston.userservice.integration.cofig.IntegrationTest;
 import com.aston.userservice.integration.cofig.PostgresTestContainer;
 import com.aston.userservice.repository.RequisitesRepository;
 import com.aston.userservice.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -65,8 +65,8 @@ class UserServiceTest extends PostgresTestContainer {
     void getUserRequisitesByIdThrowsExceptionIfNotFound() {
         UUID nonExistentUserId = UUID.randomUUID();
 
-        EntityNotFoundException exception = Assertions.assertThrows(
-                EntityNotFoundException.class,
+        RequisitesNotFoundException exception = Assertions.assertThrows(
+                RequisitesNotFoundException.class,
                 () -> userService.getUserRequisitesById(nonExistentUserId)
         );
 

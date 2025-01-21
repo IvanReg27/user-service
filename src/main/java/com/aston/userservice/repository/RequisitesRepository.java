@@ -3,6 +3,8 @@ package com.aston.userservice.repository;
 import com.aston.userservice.domain.entity.Requisites;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -22,5 +24,7 @@ public interface RequisitesRepository extends JpaRepository<Requisites, UUID> {
      * @param userId userId пользователя
      * @return пользователь с заданным id
      */
-    Optional<UserRequisitesProjection> findByUserId(UUID userId);
+    @Query("select u.firstName as firstName, TRIM(r.accountNumber) as accountNumber, TRIM(r.kbk) as kbk " +
+            "from Requisites r join r.user u where u.id = :userId")
+    Optional<UserRequisitesProjection> findByUserId(@Param("userId") UUID userId);
 }

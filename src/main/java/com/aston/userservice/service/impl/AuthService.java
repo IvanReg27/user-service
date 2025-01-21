@@ -1,6 +1,6 @@
 package com.aston.userservice.service.impl;
 
-import com.aston.userservice.domain.entity.User;
+import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.request.AuthRequest;
 import com.aston.userservice.domain.response.JwtResponse;
 import com.aston.userservice.exception.AuthException;
@@ -24,7 +24,7 @@ public class AuthService {
     private final Map<String, String> refreshStorage = new ConcurrentHashMap<>();
 
     public JwtResponse authAndGetToken(AuthRequest authRequest) {
-        final User user = userService.findByLogin(authRequest.login());
+        final UserProjection user = userService.findByLogin(authRequest.login());
 
         if (!user.getPassword().equals(authRequest.password())) {
             throw new AuthException("Incorrect password");
@@ -47,12 +47,11 @@ public class AuthService {
             final String login = claims.getSubject();
             final String saveRefreshToken = refreshStorage.get(login);
             if (saveRefreshToken != null && saveRefreshToken.equals(refreshToken)) {
-                final User user = userService.findByLogin(login);
+                final UserProjection user = userService.findByLogin(login);
                 final String accessToken = jwtService.generateAccessToken(user);
                 return new JwtResponse(accessToken, jwtService.generateRefreshToken(user));
             }
         }
         return new JwtResponse(null, null);
     }
-
 }
