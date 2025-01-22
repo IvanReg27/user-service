@@ -20,7 +20,6 @@ import java.util.UUID;
  */
 @Entity
 @Table(name = "requisites")
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder(toBuilder = true)
