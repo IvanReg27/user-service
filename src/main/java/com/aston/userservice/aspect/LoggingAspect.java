@@ -30,7 +30,7 @@ public class LoggingAspect {
 
     /**
      * Логирование начала работы метода на уровне (INFO).
-     * Логирование параметров, возвращаемых значений и исключений на уровне DEBUG и (ERROR).
+     * Логирование параметров, возвращаемых значений и исключений на уровне (DEBUG) и (ERROR).
      */
     @Around("controllerMethods() || serviceMethods()")
     public Object logAroundMethod(ProceedingJoinPoint joinPoint) throws Throwable {
