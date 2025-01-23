@@ -1,6 +1,7 @@
 package com.aston.userservice.service.impl;
 
 import com.aston.userservice.domain.entity.User;
+import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.security.JwtAuthentication;
 import com.aston.userservice.security.Role;
 import io.jsonwebtoken.*;
@@ -30,7 +31,7 @@ public class JwtService {
     @Value("${auth.refresh_token_life_seconds}")
     private Long refreshTokenLifeInSeconds;
 
-    public String generateAccessToken(@NonNull User user) {
+    public String generateAccessToken(@NonNull UserProjection user) {
         final LocalDateTime now = LocalDateTime.now();
 
         final Instant accessExpirationInstant =
@@ -49,7 +50,7 @@ public class JwtService {
                 .compact();
     }
 
-    public String generateRefreshToken(@NonNull User user) {
+    public String generateRefreshToken(@NonNull UserProjection user) {
         final LocalDateTime now = LocalDateTime.now();
 
         final Instant refreshExpirationInstant =

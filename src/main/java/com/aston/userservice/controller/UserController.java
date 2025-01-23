@@ -1,0 +1,35 @@
+package com.aston.userservice.controller;
+
+import com.aston.userservice.domain.projection.UserProjection;
+import com.aston.userservice.domain.projection.UserRequisitesProjection;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.UUID;
+
+/**
+ * Интерфейс для управления пользователем
+ */
+@RequestMapping("/user-service")
+public interface UserController {
+
+    /**
+     * Метод для получения информации о пользователе по login
+     *
+     * @param login login пользователя
+     * @return Информацию о пользователе {@link UserProjection}
+     */
+    @GetMapping("/user/{login}")
+    public ResponseEntity<UserProjection> getUser(@PathVariable String login);
+
+    /**
+     * Метод для получения информации о счете по id пользователя
+     *
+     * @param id id пользователя
+     * @return Информацию о счете {@link UserRequisitesProjection}
+     */
+    @GetMapping("/requisites/{id}")
+    public ResponseEntity<UserRequisitesProjection> getUserRequisites(@PathVariable UUID id);
+}

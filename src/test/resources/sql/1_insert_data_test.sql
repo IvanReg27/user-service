@@ -6,7 +6,7 @@ VALUES
     (gen_random_uuid(), 'Дмитрий', 'Сидоров', '1995-07-20', '789856132314', '99887766554', '0708778899', 'dmitriy', 'password3');
 
 -- Insert entries into the users_roles table
-INSERT INTO users_roles (user_id, role)
+INSERT INTO user_roles (user_id, role)
 VALUES
     ((SELECT id FROM users WHERE login = 'ivan'), 'USER'),
     ((SELECT id FROM users WHERE login = 'ivan'), 'ADMIN'),
