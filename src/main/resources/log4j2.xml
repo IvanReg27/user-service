@@ -6,23 +6,36 @@
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n" />
         </Console>
 
-        <!-- Файловый аппендер -->
-        <File name="FileLogger" fileName="logs/application.log" append="true">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n" />
-        </File>
+        <!-- Файловые аппендеры -->
+        <RollingFile name="FileLoggerInfo" fileName="logs/info.log" filePattern="logs/info-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="30"/>
+        </RollingFile>
+
+        <RollingFile name="FileLoggerDebug" fileName="logs/debug.log" filePattern="logs/debug-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="5MB"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="15"/>
+        </RollingFile>
     </Appenders>
 
     <Loggers>
         <!-- Логгер для приложения -->
         <Logger name="com.aston.userservice" level="debug" additivity="false">
-            <AppenderRef ref="Console" />
-            <AppenderRef ref="FileLogger" />
+            <AppenderRef ref="FileLoggerDebug" />
         </Logger>
 
         <!-- Корневой логгер -->
         <Root level="info">
             <AppenderRef ref="Console" />
-            <AppenderRef ref="FileLogger" />
+            <AppenderRef ref="FileLoggerInfo" />
         </Root>
     </Loggers>
 </Configuration>
