@@ -1,4 +1,4 @@
-package com.aston.userservice.controller;
+package com.aston.userservice.controller.impl;
 
 import com.aston.userservice.domain.request.AuthRequest;
 import com.aston.userservice.domain.request.RefreshJwtRequest;

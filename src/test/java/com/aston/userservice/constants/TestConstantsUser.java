@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 
-public class TestConstants {
+public class TestConstantsUser {
 
     public static final String LOGIN_NAME = "ivan";
     public static final User USER = User.builder()

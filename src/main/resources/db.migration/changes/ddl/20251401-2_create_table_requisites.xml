@@ -1,0 +1,49 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.15.xsd">
+
+    <changeSet id="20251401-2_create_table_requisites" author="i.makhorin">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="requisites"/>
+            </not>
+        </preConditions>
+
+        <createTable tableName="requisites">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="account_number" type="CHAR(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bik" type="CHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="correspondent_check" type="CHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="inn" type="CHAR(10)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="kpp" type="CHAR(9)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="kbk" type="CHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="UUID">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint
+                baseTableName="requisites"
+                baseColumnNames="user_id"
+                referencedTableName="users"
+                referencedColumnNames="id"
+                constraintName="fk_requisites_users"/>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,4 +1,4 @@
-package com.aston.userservice.controller;
+package com.aston.userservice.controller.impl;
 
 import com.aston.userservice.domain.response.SimpleMessage;
 import com.aston.userservice.service.impl.ImageService;

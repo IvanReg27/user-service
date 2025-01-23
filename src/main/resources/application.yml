@@ -10,4 +10,4 @@ spring:
     password: ${PSQL_DATASOURCE_PASSWORD:postgres}
 
   liquibase:
-    change-log: db.migration/changes/ddl/20241224-1_create_table_users.xml
+    change-log: db.migration/db.changelog-master.xml
