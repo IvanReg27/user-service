@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Аннотация для логгирования методов
+ * Кастомная аннотация для логгирования методов
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
