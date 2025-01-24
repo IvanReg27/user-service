@@ -15,24 +15,17 @@ import java.util.Arrays;
 public class LoggingAspect {
 
     /**
-     * Логирование всех методов контроллеров.
+     * Логирование методов помеченых аннотацией @Loggable.
      */
-    @Pointcut("execution(* com.aston.userservice.controller.impl..*(..))")
-    public void controllerMethods() {
-    }
-
-    /**
-     * Логирование всех методов сервисов.
-     */
-    @Pointcut("execution(* com.aston.userservice.service.impl..*(..))")
-    public void serviceMethods() {
+    @Pointcut("@annotation(com.aston.userservice.annotation.Loggable)")
+    public void loggableMethods() {
     }
 
     /**
      * Логирование начала работы метода на уровне (INFO).
      * Логирование параметров, возвращаемых значений и исключений на уровне (DEBUG) и (ERROR).
      */
-    @Around("controllerMethods() || serviceMethods()")
+    @Around("loggableMethods()")
     public Object logAroundMethod(ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().toShortString();
         Object[] args = joinPoint.getArgs();

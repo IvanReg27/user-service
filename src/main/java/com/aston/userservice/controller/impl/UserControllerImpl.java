@@ -1,5 +1,6 @@
 package com.aston.userservice.controller.impl;
 
+import com.aston.userservice.annotation.Loggable;
 import com.aston.userservice.controller.UserController;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;
@@ -17,11 +18,13 @@ public class UserControllerImpl implements UserController {
 
     private final UserService userService;
 
+    @Loggable
     @Override
     public ResponseEntity<UserProjection> getUser(@PathVariable String login) {
         return ResponseEntity.ok(userService.findByLogin(login));
     }
 
+    @Loggable
     @Override
     public ResponseEntity<UserRequisitesProjection> getUserRequisites(@PathVariable UUID id) {
         return ResponseEntity.ok(userService.getUserRequisitesById(id));
