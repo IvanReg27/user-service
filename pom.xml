@@ -27,6 +27,14 @@
         <liquibase-core.version>4.30.0</liquibase-core.version>
         <spring-boot-starter-data-jpa.version>3.4.1</spring-boot-starter-data-jpa.version>
         <spring-boot-testcontainers.version>3.3.4</spring-boot-testcontainers.version>
+        <spring-boot-starter-log4j2.version>3.4.1</spring-boot-starter-log4j2.version>
+        <slf4j-api.version>2.0.16</slf4j-api.version>
+        <log4j-slf4j-impl.version>2.24.3</log4j-slf4j-impl.version>
+        <log4j-core.version>2.24.3</log4j-core.version>
+        <log4j-api.version>2.24.3</log4j-api.version>
+        <spring-boot-starter-aop.version>3.4.1</spring-boot-starter-aop.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
     <dependencies>
         <dependency>
@@ -137,6 +145,43 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-rest</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-log4j2</artifactId>
+            <version>${spring-boot-starter-log4j2.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.16</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j-slf4j-impl.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j-core.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j-api.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+            <version>${spring-boot-starter-aop.version}</version>
         </dependency>
     </dependencies>
 

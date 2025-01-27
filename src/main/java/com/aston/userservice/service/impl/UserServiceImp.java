@@ -1,5 +1,6 @@
 package com.aston.userservice.service.impl;
 
+import com.aston.userservice.annotation.Loggable;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;
 import com.aston.userservice.exception.RequisitesNotFoundException;
@@ -29,6 +30,7 @@ public class UserServiceImp implements UserService {
      * @param login login
      * @return пользователь
      */
+    @Loggable
     @Override
     public UserProjection findByLogin(String login) {
         return userRepository.findByLogin(login)
@@ -42,6 +44,7 @@ public class UserServiceImp implements UserService {
      * @param userId userId
      * @return реквизиты счета
      */
+    @Loggable
     @Override
     public UserRequisitesProjection getUserRequisitesById(UUID userId) {
         return requisitesRepository.findByUserId(userId)
