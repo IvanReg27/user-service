@@ -4,6 +4,7 @@ server:
 spring:
   jpa:
     show-sql: true
+
   datasource:
     url: jdbc:postgresql://${PSQL_DATASOURCE_URL:localhost}:5434/UserDB
     username: ${PSQL_DATASOURCE_USERNAME:postgres}
@@ -11,3 +12,9 @@ spring:
 
   liquibase:
     change-log: db.migration/db.changelog-master.xml
+
+  Kafka:
+    bootstrap-servers: localhost:9092, localhost:9094, localhost:9096
+    producer:
+    key-serializer: org.apache.kafka.common.serialization.StringSerializer
+    value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
