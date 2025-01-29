@@ -14,7 +14,7 @@ services:
 
   # Используется KRaft-режим
   kafka-1:
-    image: confluentinc/cp-kafka:latest
+    image: confluentinc/cp-kafka:7.8.0
     container_name: kafka-1
     restart: always
     environment:
@@ -32,10 +32,12 @@ services:
       - kafka1_data:/var/lib/kafka/data
     networks:
       - kafka_network
+    ports:
+      - "9092:9092"
 
   # Используется KRaft-режим
   kafka-2:
-    image: confluentinc/cp-kafka:latest
+    image: confluentinc/cp-kafka:7.8.0
     container_name: kafka-2
     restart: always
     environment:
@@ -53,10 +55,12 @@ services:
       - kafka2_data:/var/lib/kafka/data
     networks:
       - kafka_network
+    ports:
+      - "9094:9092"
 
   # Используется KRaft-режим
   kafka-3:
-    image: confluentinc/cp-kafka:latest
+    image: confluentinc/cp-kafka:7.8.0
     container_name: kafka-3
     restart: always
     environment:
@@ -74,6 +78,8 @@ services:
       - kafka3_data:/var/lib/kafka/data
     networks:
       - kafka_network
+    ports:
+      - "9096:9092"
 
 networks:
   kafka_network:

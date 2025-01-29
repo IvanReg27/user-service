@@ -1,5 +1,6 @@
 package com.aston.userservice.service;
 
+import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;
 
@@ -25,4 +26,12 @@ public interface UserService {
      * @return реквизиты
      */
     UserRequisitesProjection getUserRequisitesById(UUID userId);
+
+    /**
+     * Метод для сохранения пользователя в системе
+     *
+     * @param user пользователь системы
+     * @return пользователь
+     */
+    User save(User user);
 }

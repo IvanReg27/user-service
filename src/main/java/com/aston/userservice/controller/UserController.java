@@ -1,10 +1,14 @@
 package com.aston.userservice.controller;
 
+import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.UUID;
@@ -32,4 +36,12 @@ public interface UserController {
      */
     @GetMapping("/requisites/{id}")
     public ResponseEntity<UserRequisitesProjection> getUserRequisites(@PathVariable UUID id);
+
+    /**
+     * Метод для сохранения нового пользователя в систему
+     *
+     * @param user пользователь в системе {@link User}
+     */
+    @PostMapping("/user/new")
+    User saveUser(@RequestBody @Valid User user);
 }

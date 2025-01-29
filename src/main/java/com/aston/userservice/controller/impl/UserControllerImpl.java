@@ -2,6 +2,7 @@ package com.aston.userservice.controller.impl;
 
 import com.aston.userservice.annotation.Loggable;
 import com.aston.userservice.controller.UserController;
+import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;
 import com.aston.userservice.service.UserService;
@@ -28,5 +29,11 @@ public class UserControllerImpl implements UserController {
     @Override
     public ResponseEntity<UserRequisitesProjection> getUserRequisites(@PathVariable UUID id) {
         return ResponseEntity.ok(userService.getUserRequisitesById(id));
+    }
+
+    @Loggable
+    @Override
+    public User saveUser(User user) {
+        return userService.save(user);
     }
 }
