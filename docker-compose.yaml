@@ -12,68 +12,74 @@ services:
     ports:
       - "5434:5432"
 
-  kafka1:
-    image: confluentinc/cp-kafka:7.5.0
-    container_name: kafka1
+  # Используется KRaft-режим
+  kafka-1:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka-1
     restart: always
-    ports:
-      - "9092:9092"
-      - "9991:9999" # JMX порт для мониторинга и управления Kafka
     environment:
-      KAFKA_CLUSTER_ID: eU8hzxhWS06SgMqF1uNeZA
       KAFKA_NODE_ID: 1
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_LISTENERS: CONTROLLER://kafka1:9093,PLAINTEXT://kafka1:9092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:9092,PLAINTEXT_HOST://localhost:9092
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka1:9093,2@kafka2:9093,3@kafka3:9093
       KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://kafka-1:9092,CONTROLLER://kafka-1:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:9093,2@kafka-2:9093,3@kafka-3:9093
+      CLUSTER_ID: "Hj48sJkQT5-aLksWGHFw2A"
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      KAFKA_CREATE_TOPICS: "user-created-events-topic:3:3:MIN_INSYNC_REPLICAS=2"  # Описание топика с количеством партиций и реплик
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    volumes:
+      - kafka1_data:/var/lib/kafka/data
+    networks:
+      - kafka_network
 
-  kafka2:
-    image: confluentinc/cp-kafka:7.5.0
-    container_name: kafka2
+  # Используется KRaft-режим
+  kafka-2:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka-2
     restart: always
-    ports:
-      - "9094:9092"
-      - "9992:9999" # JMX порт для мониторинга и управления Kafka
     environment:
-      KAFKA_CLUSTER_ID: eU8hzxhWS06SgMqF1uNeZA
       KAFKA_NODE_ID: 2
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_LISTENERS: CONTROLLER://kafka2:9093,PLAINTEXT://kafka2:9092,PLAINTEXT_HOST://localhost:9094
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka2:9092,PLAINTEXT_HOST://localhost:9094
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka1:9093,2@kafka2:9093,3@kafka3:9093
       KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://kafka-2:9094,CONTROLLER://kafka-2:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9094
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:9093,2@kafka-2:9093,3@kafka-3:9093
+      CLUSTER_ID: "Hj48sJkQT5-aLksWGHFw2A"
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      KAFKA_CREATE_TOPICS: "user-created-events-topic-2:3:3:MIN_INSYNC_REPLICAS=2"  # Описание топика с количеством партиций и реплик
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    volumes:
+      - kafka2_data:/var/lib/kafka/data
+    networks:
+      - kafka_network
 
-  kafka3:
-    image: confluentinc/cp-kafka:7.5.0
-    container_name: kafka3
+  # Используется KRaft-режим
+  kafka-3:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka-3
     restart: always
-    ports:
-      - "9096:9092"
-      - "9993:9999" # JMX порт для мониторинга и управления Kafka
     environment:
-      KAFKA_CLUSTER_ID: eU8hzxhWS06SgMqF1uNeZA
       KAFKA_NODE_ID: 3
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
-      KAFKA_LISTENERS: CONTROLLER://kafka3:9093,PLAINTEXT://kafka3:9092,PLAINTEXT_HOST://localhost:9096
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka3:9092,PLAINTEXT_HOST://localhost:9096
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka1:9093,2@kafka2:9093,3@kafka3:9093
       KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://kafka-3:9096,CONTROLLER://kafka-3:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9096
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:9093,2@kafka-2:9093,3@kafka-3:9093
+      CLUSTER_ID: "Hj48sJkQT5-aLksWGHFw2A"
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      KAFKA_CREATE_TOPICS: "user-created-events-topic-3:3:3:MIN_INSYNC_REPLICAS=2"  # Описание топика с количеством партиций и реплик
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 3
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 2
-      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+    volumes:
+      - kafka3_data:/var/lib/kafka/data
+    networks:
+      - kafka_network
+
+networks:
+  kafka_network:
+    driver: bridge
+
+volumes:
+  kafka1_data:
+  kafka2_data:
+  kafka3_data:
