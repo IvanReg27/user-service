@@ -2,13 +2,14 @@ package com.aston.userservice.controller.impl;
 
 import com.aston.userservice.annotation.Loggable;
 import com.aston.userservice.controller.UserController;
-import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;
 import com.aston.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
@@ -33,7 +34,8 @@ public class UserControllerImpl implements UserController {
 
     @Loggable
     @Override
-    public User saveUser(User user) {
-        return userService.save(user);
+    public ResponseEntity<String> createdUser (@RequestBody UserProjection userProjection) {
+        String userId = userService.createdUser(userProjection);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userId);
     }
 }

@@ -13,8 +13,15 @@ spring:
   liquibase:
     change-log: db.migration/db.changelog-master.xml
 
-  Kafka:
-    bootstrap-servers: localhost:9092, localhost:9094, localhost:9096
+  kafka:
+    bootstrap-servers: localhost:9092,localhost:9094,localhost:9096
     producer:
-    key-serializer: org.apache.kafka.common.serialization.StringSerializer
-    value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    consumer:
+      group-id: user-service-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: '*'
+      auto-offset-reset: earliest

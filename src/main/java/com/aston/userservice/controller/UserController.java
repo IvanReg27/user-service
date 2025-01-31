@@ -3,7 +3,6 @@ package com.aston.userservice.controller;
 import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;
-import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,8 +39,8 @@ public interface UserController {
     /**
      * Метод для сохранения нового пользователя в систему
      *
-     * @param user пользователь в системе {@link User}
+     * @param userProjection пользователь в системе {@link User}
      */
     @PostMapping("/user/new")
-    User saveUser(@RequestBody @Valid User user);
+    public ResponseEntity<String> createdUser(@RequestBody UserProjection userProjection);
 }
