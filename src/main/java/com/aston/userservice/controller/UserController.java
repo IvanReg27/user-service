@@ -1,5 +1,6 @@
 package com.aston.userservice.controller;
 
+import com.aston.userservice.domain.dto.UserDto;
 import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;
@@ -39,8 +40,8 @@ public interface UserController {
     /**
      * Метод для сохранения нового пользователя в систему
      *
-     * @param userProjection пользователь в системе {@link User}
+     * @param userDto пользователь в системе {@link User}
      */
-    @PostMapping("/user/new")
-    public ResponseEntity<String> createdUser(@RequestBody UserProjection userProjection);
+    @PostMapping("/user")
+    public ResponseEntity<Object> createUser(@RequestBody UserDto userDto);
 }

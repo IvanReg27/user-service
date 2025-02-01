@@ -1,8 +1,7 @@
-package com.aston.userservice.event;
+package com.aston.userservice.domain.dto;
 
 import com.aston.userservice.security.Role;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,25 +13,14 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
-public class UserCreatedEvent {
-
-    private String userId;
-
+public class UserDto {
     private String firstName;
-
     private String lastName;
-
     private LocalDate birthday;
-
     private String inn;
-
     private String snils;
-
     private String passportNumber;
-
     private String login;
-
     private String password;
-
     private Set<Role> roles;
 }

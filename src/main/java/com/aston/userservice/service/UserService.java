@@ -1,9 +1,12 @@
 package com.aston.userservice.service;
 
+import com.aston.userservice.annotation.Loggable;
+import com.aston.userservice.domain.dto.UserDto;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;
 
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Интерфейс для работы с пользователем
@@ -29,8 +32,8 @@ public interface UserService {
     /**
      * Метод для сохранения пользователя в системе
      *
-     * @param userProjection пользователь системы
+     * @param userDto пользователь системы
      * @return пользователь
      */
-    String createdUser(UserProjection userProjection);
+    String createUser(UserDto userDto) throws ExecutionException, InterruptedException;
 }

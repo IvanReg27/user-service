@@ -1,6 +1,7 @@
 package com.aston.userservice.service.impl;
 
 import com.aston.userservice.annotation.Loggable;
+import com.aston.userservice.domain.dto.UserDto;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;
 import com.aston.userservice.event.UserCreatedEvent;
@@ -16,7 +17,7 @@ import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Класс для работы с пользователем
@@ -61,29 +62,26 @@ public class UserServiceImp implements UserService {
     /**
      * Метод для сохранения пользователя в системе
      *
-     * @param userProjection пользователь системы
+     * @param userDto пользователь системы
      * @return пользователь
      */
     @Loggable
     @Override
-    public String createdUser(UserProjection userProjection) {
-        //To do save DB
+    public String createUser(UserDto userDto) throws ExecutionException, InterruptedException {
+        //TODO save DB
         String userId = UUID.randomUUID().toString();
-        UserCreatedEvent userCreatedEvent = new UserCreatedEvent(userId, userProjection.getFirstName(),
-                userProjection.getLastName(), userProjection.getBirthday(), userProjection.getInn(),
-                userProjection.getSnils(), userProjection.getPassportNumber(),
-                userProjection.getLogin(), userProjection.getPassword(), userProjection.getRoles());
+        UserCreatedEvent userCreatedEvent = new UserCreatedEvent(userId, userDto.getFirstName(),
+                userDto.getLastName(), userDto.getBirthday(), userDto.getInn(), userDto.getSnils(),
+                userDto.getPassportNumber(), userDto.getLogin(), userDto.getPassword(), userDto.getRoles());
 
-        CompletableFuture<SendResult<String, UserCreatedEvent>> future = kafkaTemplate
-                .send("user-created-events-topic", userId, userCreatedEvent);
-        future.whenComplete((result, exception) -> {
-            if (exception != null) {
-                log.error("Не удалось отправить сообщение: {}", exception.getMessage());
-            } else {
-                log.info("Сообщение отправлено успешно: {}", result.getRecordMetadata());
-            }
-        });
-        log.info("Возвращает: {}", userId);
+        SendResult<String, UserCreatedEvent> result = kafkaTemplate
+                .send("user-created-events-topic", userId, userCreatedEvent).get();
+
+        log.info("Топик: {}", result.getRecordMetadata().topic());
+        log.info("Партиция: {}", result.getRecordMetadata().partition());
+        log.info("Оффсет: {}", result.getRecordMetadata().offset());
+
+        log.info("Возвращено: {}", userId);
 
         return userId;
     }
