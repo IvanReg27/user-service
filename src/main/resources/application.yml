@@ -14,7 +14,14 @@ spring:
     change-log: db.migration/db.changelog-master.xml
 
   kafka:
+    bootstrap-servers: localhost:9092,localhost:9094,localhost:9096
     producer:
-      bootstrap-servers: localhost:9092,localhost:9094,localhost:9096
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        acks: all # Параметр ПОДТВЕРЖДЕНИЯ получения брокером сообщения от продюсера
+        delivery.timeout.ms: 10000
+        linger.ms: 0
+        request.timeout.ms: 5000
+        enable.idempotence: true # Параметр для обеспечения ИДЕМПОТЕНСТНОСТИ направления сообщения в брокер
+        max.in.flight.requests.per.connection: 5
