@@ -15,7 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Конфигурация(настройки) для Kafka
+ * Конфигурация(настройки) для Kafka Producer
  *
  */
 @Configuration
