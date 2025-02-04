@@ -2,6 +2,7 @@ package com.aston.userservice.service.impl;
 
 import com.aston.userservice.annotation.Loggable;
 import com.aston.userservice.domain.dto.UserDto;
+import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;
 import com.aston.userservice.event.UserCreatedEvent;
@@ -15,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
@@ -63,24 +65,43 @@ public class UserServiceImp implements UserService {
      * Производитель, отправляет события(сообщения) в брокер
      *
      */
+    @Transactional
     @Loggable
     @Override
     public String createUser(UserDto userDto) throws ExecutionException, InterruptedException {
-        //TODO save DB
-        String userId = UUID.randomUUID().toString();
-        UserCreatedEvent userCreatedEvent = new UserCreatedEvent(userId, userDto.getFirstName(),
-                userDto.getLastName(), userDto.getBirthday(), userDto.getInn(), userDto.getSnils(),
-                userDto.getPassportNumber(), userDto.getLogin(), userDto.getPassword(), userDto.getRoles());
+        User userEntity = User.builder()
+                .firstName(userDto.getFirstName())
+                .lastName(userDto.getLastName())
+                .birthday(userDto.getBirthday())
+                .inn(userDto.getInn())
+                .snils(userDto.getSnils())
+                .passportNumber(userDto.getPassportNumber())
+                .login(userDto.getLogin())
+                .password(userDto.getPassword()) // Пароль сохраняется как есть
+                .roles(userDto.getRoles())
+                .build();
+
+        userEntity = userRepository.save(userEntity);
+        log.info("Пользователь сохранен в БД с id: {}", userEntity.getId());
+
+        /**
+         * Создаем событие(сообщение) для Kafka, используя сгенерированный в БД userId
+         *
+         */
+        UserCreatedEvent userCreatedEvent = new UserCreatedEvent(userEntity.getId().toString(),
+                userEntity.getFirstName(), userEntity.getLastName(), userEntity.getBirthday(),
+                userEntity.getInn(), userEntity.getSnils(), userEntity.getPassportNumber(),
+                userEntity.getLogin(), userEntity.getPassword(), userEntity.getRoles());
 
         SendResult<String, UserCreatedEvent> result = kafkaTemplate
-                .send("user-created-events-topic", userId, userCreatedEvent).get();
+                .send("user-created-events-topic", userEntity.getId().toString(), userCreatedEvent).get();
 
         log.info("Топик: {}", result.getRecordMetadata().topic());
         log.info("Партиция: {}", result.getRecordMetadata().partition());
         log.info("Оффсет: {}", result.getRecordMetadata().offset());
 
-        log.info("Сообщение доставлено брокеру, подтверждено id: {}", userId);
+        log.info("Сообщение доставлено брокеру, подтверждено id: {}", userEntity.getId());
 
-        return userId;
+        return userEntity.getId().toString();
     }
 }
