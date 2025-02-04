@@ -14,8 +14,12 @@ import org.springframework.kafka.core.ProducerFactory;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Конфигурация(настройки) для Kafka
+ *
+ */
 @Configuration
-public class KafkaConfig {
+public class KafkaConfigProducer {
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;

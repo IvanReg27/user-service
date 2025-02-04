@@ -1,6 +1,5 @@
 package com.aston.userservice.service;
 
-import com.aston.userservice.annotation.Loggable;
 import com.aston.userservice.domain.dto.UserDto;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;

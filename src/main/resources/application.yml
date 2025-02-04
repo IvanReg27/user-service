@@ -15,6 +15,7 @@ spring:
 
   kafka:
     bootstrap-servers: localhost:9092,localhost:9094,localhost:9096
+
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
@@ -25,3 +26,10 @@ spring:
         request.timeout.ms: 5000
         enable.idempotence: true # Параметр для обеспечения ИДЕМПОТЕНСТНОСТИ направления сообщения в брокер
         max.in.flight.requests.per.connection: 5
+
+    consumer:
+      group-id: user-created-events
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.aston.userservice.event"

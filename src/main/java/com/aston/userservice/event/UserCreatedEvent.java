@@ -2,7 +2,6 @@ package com.aston.userservice.event;
 
 import com.aston.userservice.security.Role;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

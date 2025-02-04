@@ -60,10 +60,8 @@ public class UserServiceImp implements UserService {
     }
 
     /**
-     * Метод для сохранения пользователя в системе
+     * Производитель, отправляет события(сообщения) в брокер
      *
-     * @param userDto пользователь системы
-     * @return пользователь
      */
     @Loggable
     @Override
@@ -81,7 +79,7 @@ public class UserServiceImp implements UserService {
         log.info("Партиция: {}", result.getRecordMetadata().partition());
         log.info("Оффсет: {}", result.getRecordMetadata().offset());
 
-        log.info("Возвращено: {}", userId);
+        log.info("Сообщение доставлено брокеру, подтверждено id: {}", userId);
 
         return userId;
     }
