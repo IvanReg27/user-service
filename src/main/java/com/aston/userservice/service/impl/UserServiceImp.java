@@ -62,8 +62,10 @@ public class UserServiceImp implements UserService {
     }
 
     /**
-     * Производитель, отправляет события(сообщения) в брокер
+     * Метод для сохранения пользователя в системе
      *
+     * @param userDto пользователь системы
+     * @return пользователь
      */
     @Transactional
     @Loggable
