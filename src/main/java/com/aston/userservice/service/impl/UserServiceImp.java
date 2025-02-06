@@ -5,7 +5,6 @@ import com.aston.userservice.domain.dto.UserDto;
 import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;
-import com.aston.userservice.event.UserCreatedEvent;
 import com.aston.userservice.exception.RequisitesNotFoundException;
 import com.aston.userservice.exception.UserNotFoundException;
 import com.aston.userservice.repository.RequisitesRepository;
@@ -14,13 +13,10 @@ import com.aston.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Класс для работы с пользователем
