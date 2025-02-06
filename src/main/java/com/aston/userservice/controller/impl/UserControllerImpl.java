@@ -39,14 +39,8 @@ public class UserControllerImpl implements UserController {
 
     @Loggable
     @Override
-    public ResponseEntity<Object> createUser (@RequestBody UserDto userDto) {
-        String userId = null;
-        try {
-            userId = userService.createUser(userDto);
-        } catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorMessage(new Date(), e.getMessage()));
-        }
+    public ResponseEntity<Object> createUser(@RequestBody UserDto userDto) {
+        String userId = userService.createUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(userId);
     }
 }

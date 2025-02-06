@@ -5,7 +5,6 @@ import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;
 
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Интерфейс для работы с пользователем
@@ -34,5 +33,5 @@ public interface UserService {
      * @param userDto пользователь системы
      * @return пользователь
      */
-    String createUser(UserDto userDto) throws ExecutionException, InterruptedException;
+    String createUser(UserDto userDto);
 }
