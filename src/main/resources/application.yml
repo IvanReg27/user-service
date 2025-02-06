@@ -30,7 +30,7 @@ spring:
         max.in.flight.requests.per.connection: 5
 
     consumer:
-      group-id: user-created-events
+      group-id: user-created-events # Консьюмер ГРУППА
 #      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
 #      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
