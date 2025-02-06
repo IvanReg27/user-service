@@ -6,7 +6,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 /**
- * Потребитель, получает события(сообщения) из брокера
+ * Consumer, получает события(сообщения) из брокера
  *
  */
 @Component

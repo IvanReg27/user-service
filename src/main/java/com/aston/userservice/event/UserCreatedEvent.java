@@ -9,6 +9,11 @@ import lombok.Setter;
 import java.time.LocalDate;
 import java.util.Set;
 
+
+/**
+ * Класс для создания события для Kafka
+ *
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter

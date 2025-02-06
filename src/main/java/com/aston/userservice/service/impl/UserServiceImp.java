@@ -32,7 +32,7 @@ public class UserServiceImp implements UserService {
 
     private final UserRepository userRepository;
     private final RequisitesRepository requisitesRepository;
-    private final KafkaTemplate<String, UserCreatedEvent> kafkaTemplate;
+    private final KafkaProducerService kafkaProducerService;
 
     /**
      * Метод для получения пользователя по логину
@@ -88,27 +88,10 @@ public class UserServiceImp implements UserService {
             userEntity = userRepository.save(userEntity);
             log.info("Пользователь сохранен в БД с id: {}", userEntity.getId());
 
-            /**
-             * Создаем событие(сообщение) для Kafka, используя сгенерированный в БД userId
-             *
-             */
-            UserCreatedEvent userCreatedEvent = new UserCreatedEvent(userEntity.getId().toString(),
-                    userEntity.getFirstName(), userEntity.getLastName(), userEntity.getBirthday(),
-                    userEntity.getInn(), userEntity.getSnils(), userEntity.getPassportNumber(),
-                    userEntity.getLogin(), userEntity.getPassword(), userEntity.getRoles());
+            // Создаем событие(сообщение) для Kafka, используя сгенерированный в БД userId
+            kafkaProducerService.sendUserCreatedEvent(userEntity);
 
-            SendResult<String, UserCreatedEvent> result = kafkaTemplate
-                    .send("user-created-events-topic", userEntity.getId().toString(), userCreatedEvent).get();
-
-            log.info("Топик: {}", result.getRecordMetadata().topic());
-            log.info("Партиция: {}", result.getRecordMetadata().partition());
-            log.info("Оффсет: {}", result.getRecordMetadata().offset());
-
-            log.info("Сообщение доставлено брокеру, подтверждено id: {}", userEntity.getId());
             return userEntity.getId().toString();
-        } catch (ExecutionException | InterruptedException e) {
-            log.error("Ошибка при отправке сообщения в брокер: {}", e.getMessage(), e);
-            throw new ServiceException("Ошибка при отправке события о создании нового пользователя", e);
         } catch (Exception e) {
             log.error("Ошибка при создании нового пользователя: {}", e.getMessage(), e);
             throw new ServiceException("Ошибка при создании нового пользователя", e);

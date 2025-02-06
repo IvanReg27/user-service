@@ -5,7 +5,6 @@ import com.aston.userservice.controller.UserController;
 import com.aston.userservice.domain.dto.UserDto;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;
-import com.aston.userservice.exception.ErrorMessage;
 import com.aston.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
 import java.util.UUID;
 
 @RestController
