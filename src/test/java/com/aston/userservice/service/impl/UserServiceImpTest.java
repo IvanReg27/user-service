@@ -35,8 +35,6 @@ class UserServiceImpTest {
     private UserRepository userRepository;
     @Mock
     private RequisitesRepository requisitesRepository;
-    @Mock
-    private KafkaProducerService kafkaProducerService;
 
     @InjectMocks
     private UserServiceImp userService;
