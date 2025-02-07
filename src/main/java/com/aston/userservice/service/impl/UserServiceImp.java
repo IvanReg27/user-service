@@ -86,6 +86,10 @@ public class UserServiceImp implements UserService {
 
             String userId = userEntity.getId().toString();
             log.info("Пользователь успешно сохранен в БД с id: {}", userEntity.getId());
+
+            // Создаем событие(сообщение) для Kafka, используя сгенерированный в БД userId
+            kafkaProducerService.sendUserCreatedEvent(userEntity);
+
             return userId;
 
         } catch (Exception e) {
