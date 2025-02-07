@@ -82,9 +82,12 @@ public class UserServiceImp implements UserService {
                     .build();
 
             userEntity = userRepository.save(userEntity);
-            log.info("Пользователь сохранен в БД с id: {}", userEntity.getId());
+            userRepository.flush();
 
-            return userEntity.getId().toString();
+            String userId = userEntity.getId().toString();
+            log.info("Пользователь успешно сохранен в БД с id: {}", userEntity.getId());
+            return userId;
+
         } catch (Exception e) {
             log.error("Ошибка при создании нового пользователя: {}", e.getMessage(), e);
             throw new ServiceException("Ошибка при создании нового пользователя", e);
