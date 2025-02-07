@@ -13,9 +13,11 @@ import com.aston.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -69,6 +71,14 @@ public class UserServiceImp implements UserService {
     @Override
     public String createUser(UserDto userDto) {
         try {
+            //Реализация иденпотентности на уровне БД (перед сохранением в БД, проверяем ИНН пользователя)
+            Optional<User> existingUser = userRepository.findByInn(userDto.getInn());
+            if (existingUser.isPresent()) {
+                log.info("Пользователь с ИНН {} уже существует. Возвращаем существующий ID: {}",
+                        userDto.getInn(), existingUser.get().getId());
+                return existingUser.get().getId().toString();
+            }
+
             User userEntity = User.builder()
                     .firstName(userDto.getFirstName())
                     .lastName(userDto.getLastName())
@@ -83,15 +93,18 @@ public class UserServiceImp implements UserService {
 
             userEntity = userRepository.save(userEntity);
             userRepository.flush();
-
-            String userId = userEntity.getId().toString();
             log.info("Пользователь успешно сохранен в БД с id: {}", userEntity.getId());
 
             // Создаем событие(сообщение) для Kafka, используя сгенерированный в БД userId
             kafkaProducerService.sendUserCreatedEvent(userEntity);
 
-            return userId;
+            return userEntity.getId().toString();
 
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Попытка создать дубликат пользователя с ИНН {}", userDto.getInn());
+            Optional<User> existingUser = userRepository.findByInn(userDto.getInn());
+            return existingUser.map(user -> user.getId().toString()).orElseThrow(() ->
+                    new ServiceException("Ошибка при проверке существующего пользователя", e));
         } catch (Exception e) {
             log.error("Ошибка при создании нового пользователя: {}", e.getMessage(), e);
             throw new ServiceException("Ошибка при создании нового пользователя", e);
