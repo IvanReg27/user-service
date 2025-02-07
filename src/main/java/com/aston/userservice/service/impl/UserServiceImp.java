@@ -71,7 +71,7 @@ public class UserServiceImp implements UserService {
     @Override
     public String createUser(UserDto userDto) {
         try {
-            //Реализация иденпотентности на уровне БД (перед сохранением в БД, проверяем ИНН пользователя)
+            //Реализация иденпотентности на уровне БД (перед сохранением в БД, проверяем, существует ли такой ИНН в БД)
             Optional<User> existingUser = userRepository.findByInn(userDto.getInn());
             if (existingUser.isPresent()) {
                 log.info("Пользователь с ИНН {} уже существует. Возвращаем существующий ID: {}",
