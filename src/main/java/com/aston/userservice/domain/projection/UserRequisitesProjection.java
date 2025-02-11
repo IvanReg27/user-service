@@ -1,7 +1,5 @@
 package com.aston.userservice.domain.projection;
 
-import org.springframework.data.rest.core.config.Projection;
-
 /**
  * Проекция для извлечения реквизитов пользователя.
  */

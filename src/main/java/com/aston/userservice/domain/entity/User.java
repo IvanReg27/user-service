@@ -13,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,7 +30,7 @@ import java.util.UUID;
  * Класс сущность, соответствующий таблице User в UserDB
  */
 @Entity
-@Table(name = "users")
+@Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "inn"))
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -48,6 +49,7 @@ public class User {
 
     private LocalDate birthday;
 
+    @Column(nullable = false, unique = true)
     private String inn;
 
     private String snils;
