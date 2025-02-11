@@ -11,3 +11,76 @@ services:
       POSTGRES_DB: UserDB
     ports:
       - "5434:5432"
+
+  # Используется KRaft-режим(вместо ZooKeeper), кластер из трёх брокеров
+  kafka-1:
+    image: confluentinc/cp-kafka:7.8.0
+    container_name: kafka-1
+    restart: always
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://kafka-1:9092,CONTROLLER://kafka-1:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:9093,2@kafka-2:9093,3@kafka-3:9093
+      CLUSTER_ID: "Hj48sJkQT5-aLksWGHFw2A" # Обязательный ключ для кластера брокеров
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+    volumes:
+      - kafka1_data:/var/lib/kafka/data
+    networks:
+      - kafka_network
+    ports:
+      - "9092:9092"
+
+  kafka-2:
+    image: confluentinc/cp-kafka:7.8.0
+    container_name: kafka-2
+    restart: always
+    environment:
+      KAFKA_NODE_ID: 2
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://kafka-2:9092,CONTROLLER://kafka-2:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9094
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:9093,2@kafka-2:9093,3@kafka-3:9093
+      CLUSTER_ID: "Hj48sJkQT5-aLksWGHFw2A" # Обязательный ключ для кластера брокеров
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+    volumes:
+      - kafka2_data:/var/lib/kafka/data
+    networks:
+      - kafka_network
+    ports:
+      - "9094:9092"
+
+  kafka-3:
+    image: confluentinc/cp-kafka:7.8.0
+    container_name: kafka-3
+    restart: always
+    environment:
+      KAFKA_NODE_ID: 3
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://kafka-3:9092,CONTROLLER://kafka-3:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9096
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka-1:9093,2@kafka-2:9093,3@kafka-3:9093
+      CLUSTER_ID: "Hj48sJkQT5-aLksWGHFw2A" # Обязательный ключ для кластера брокеров
+      KAFKA_LOG_DIRS: /var/lib/kafka/data
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+    volumes:
+      - kafka3_data:/var/lib/kafka/data
+    networks:
+      - kafka_network
+    ports:
+      - "9096:9092"
+
+networks:
+  kafka_network:
+    driver: bridge
+
+volumes:
+  kafka1_data:
+  kafka2_data:
+  kafka3_data:
