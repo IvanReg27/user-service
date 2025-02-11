@@ -35,3 +35,6 @@ spring:
 #      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "com.aston.userservice.event"
+
+jwt:
+  secret: ${JWT_SECRET_KEY:357638792F423F4428472B4B6250655368566D597133743677397A2443264629}

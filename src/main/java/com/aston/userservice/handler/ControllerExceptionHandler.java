@@ -1,7 +1,6 @@
 package com.aston.userservice.handler;
 
 import com.aston.userservice.domain.response.SimpleMessage;
-import com.aston.userservice.exception.AuthException;
 import com.aston.userservice.exception.UserNotFoundException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
@@ -28,18 +27,6 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     protected SimpleMessage handleUserNotFoundException(UserNotFoundException exception) {
-        return new SimpleMessage(exception.getMessage());
-    }
-
-    @ExceptionHandler(AuthException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    protected SimpleMessage handleAuthException(AuthException exception) {
-        return new SimpleMessage(exception.getMessage());
-    }
-
-    @ExceptionHandler(JwtException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected SimpleMessage handleJwtException(JwtException exception) {
         return new SimpleMessage(exception.getMessage());
     }
 }

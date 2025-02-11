@@ -29,7 +29,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceImpTest {
+class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
@@ -37,7 +37,7 @@ class UserServiceImpTest {
     private RequisitesRepository requisitesRepository;
 
     @InjectMocks
-    private UserServiceImp userService;
+    private UserServiceImpl userService;
 
     private User user;
     private UserProjection userProjection;

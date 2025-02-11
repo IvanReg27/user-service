@@ -1,4 +1,15 @@
 package com.aston.userservice.domain.request;
 
-public record AuthRequest(String login, String password) {
+import lombok.Getter;
+import lombok.Setter;
+
+/**
+ * DTO класc
+ *
+ */
+@Getter
+@Setter
+public class AuthRequest {
+    private String login;
+    private String password;
 }
