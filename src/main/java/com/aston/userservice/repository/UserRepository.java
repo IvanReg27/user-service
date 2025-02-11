@@ -1,6 +1,5 @@
 package com.aston.userservice.repository;
 
-import com.aston.userservice.domain.dto.UserDto;
 import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.projection.UserProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
