@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * DTO класc
+ * DTO класc для принятия логина и пароля
  *
  */
 @Getter

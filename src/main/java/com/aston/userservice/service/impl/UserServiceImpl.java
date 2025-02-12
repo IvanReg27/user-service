@@ -17,6 +17,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,6 +35,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final UserRepository userRepository;
     private final RequisitesRepository requisitesRepository;
     private final KafkaProducerService kafkaProducerService;
+
+    private final PasswordEncoder passwordEncoder;
+
 
     /**
      * Метод для получения пользователя по логину
@@ -90,7 +94,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                     .snils(userDto.getSnils())
                     .passportNumber(userDto.getPassportNumber())
                     .login(userDto.getLogin())
-                    .password(userDto.getPassword())
+                    .password(passwordEncoder.encode(userDto.getPassword()))
                     .roles(userDto.getRoles())
                     .build();
 

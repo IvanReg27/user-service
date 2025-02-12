@@ -29,14 +29,16 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String password = authentication.getCredentials().toString();
 
         UserDetails userDetails = userService.loadUserByUsername(username);
-        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+        if (userDetails == null || !passwordEncoder.matches(password, userDetails.getPassword())) {
             throw new BadCredentialsException("Неверный пароль");
         }
+
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
     @Override
     public boolean supports(Class<?> authentication) {
+
         return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }

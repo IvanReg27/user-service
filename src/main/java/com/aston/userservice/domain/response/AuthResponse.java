@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * DTO класc
+ * DTO класc для возврата токена, после принятия логина и пароля
  *
  */
 @Getter
