@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 
 /**
- * Проверка подленности JWT у пользователя:
+ * Проверка учетных данных пользователя (пароля) перед выдачей JWT токена
  *
  */
 @Component

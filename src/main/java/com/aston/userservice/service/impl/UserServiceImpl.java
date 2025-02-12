@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public String createUser(UserDto userDto) {
         try {
-            //Реализация иденпотентности на уровне БД (перед сохранением в БД, проверяем, существует ли такой ИНН в БД)
+            //Реализация идемпотентности на уровне БД (перед сохранением в БД, проверяем, существует ли такой ИНН в БД)
             Optional<User> existingUser = userRepository.findByInn(userDto.getInn());
             if (existingUser.isPresent()) {
                 log.info("Пользователь с ИНН {} уже существует. Возвращаем существующий ID: {}",
@@ -119,7 +119,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     /**
-     * Метод для поиска пользователя в БД по username
+     * Метод для создания объекта(пользователя) по логину для
+     * дальнейшего использования объета Spring Security для
+     * аутентификации
      *
      * @param username логин пользователя
      * @return логин, пароль, роль
