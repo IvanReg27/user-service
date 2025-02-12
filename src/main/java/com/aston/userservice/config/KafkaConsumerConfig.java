@@ -29,7 +29,7 @@ import java.util.Map;
  *
  */
 @Configuration
-public class KafkaConfigConsumer {
+public class KafkaConsumerConfig {
 
     @Autowired
     Environment environment;
