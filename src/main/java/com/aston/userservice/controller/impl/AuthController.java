@@ -3,6 +3,7 @@ package com.aston.userservice.controller.impl;
 
 import com.aston.userservice.annotation.Loggable;
 import com.aston.userservice.domain.request.AuthRequest;
+import com.aston.userservice.domain.request.RefreshTokenRequest;
 import com.aston.userservice.domain.response.AuthResponse;
 import com.aston.userservice.service.impl.UserServiceImpl;
 import com.aston.userservice.util.JwtTokenUtil;
@@ -20,7 +21,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Контроллер, который обрабатывает вход пользователя и выдает ему JWT:
+ * Контроллер, который обрабатывает вход пользователя
+ * и выдает ему JWT аксес и рефреш токены
  *
  */
 @RestController
@@ -41,11 +43,30 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(request.getLogin(), request.getPassword()));
 
             UserDetails userDetails = userServiceImpl.loadUserByUsername(request.getLogin());
-            String token = jwtTokenUtil.generateToken(userDetails);
+            String accessToken = jwtTokenUtil.generateToken(userDetails);
+            String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
 
-            return ResponseEntity.ok(new AuthResponse(token));
+            return ResponseEntity.ok(new AuthResponse(accessToken, refreshToken));
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Неверный логин или пароль");
         }
+    }
+
+    @Loggable
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request) {
+        String refreshToken = request.getRefreshToken();
+
+        if (!jwtTokenUtil.validateRefreshToken(refreshToken)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Неверный или просроченный рефреш token");
+        }
+
+        String username = jwtTokenUtil.extractUsername(refreshToken);
+        UserDetails userDetails = userServiceImpl.loadUserByUsername(username);
+
+        String newAccessToken = jwtTokenUtil.generateToken(userDetails);
+        String newRefreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
+
+        return ResponseEntity.ok(new AuthResponse(newAccessToken, newRefreshToken));
     }
 }
