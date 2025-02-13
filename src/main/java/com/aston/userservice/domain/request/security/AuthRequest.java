@@ -1,4 +1,4 @@
-package com.aston.userservice.domain.request;
+package com.aston.userservice.domain.request.security;
 
 import lombok.Getter;
 import lombok.Setter;

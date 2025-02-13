@@ -1,4 +1,4 @@
-package com.aston.userservice.domain.response;
+package com.aston.userservice.domain.response.security;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

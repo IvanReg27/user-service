@@ -2,11 +2,11 @@ package com.aston.userservice.controller.impl;
 
 
 import com.aston.userservice.annotation.Loggable;
-import com.aston.userservice.domain.request.AuthRequest;
-import com.aston.userservice.domain.request.RefreshTokenRequest;
-import com.aston.userservice.domain.response.AuthResponse;
+import com.aston.userservice.domain.request.security.AuthRequest;
+import com.aston.userservice.domain.request.security.RefreshTokenRequest;
+import com.aston.userservice.domain.response.security.AuthResponse;
 import com.aston.userservice.service.impl.UserServiceImpl;
-import com.aston.userservice.util.JwtTokenUtil;
+import com.aston.userservice.util.security.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/auth")
 @Slf4j
-public class AuthController {
+public class AuthControllerImpl {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;

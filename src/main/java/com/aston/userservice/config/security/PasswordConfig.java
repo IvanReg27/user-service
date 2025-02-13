@@ -1,4 +1,4 @@
-package com.aston.userservice.config;
+package com.aston.userservice.config.security;
 
 import com.aston.userservice.service.impl.UserServiceImpl;
 import org.springframework.context.annotation.Bean;

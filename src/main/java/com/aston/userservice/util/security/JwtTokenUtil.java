@@ -1,4 +1,4 @@
-package com.aston.userservice.util;
+package com.aston.userservice.util.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -23,8 +23,8 @@ public class JwtTokenUtil {
 
     private final Key SECRET_KEY;
 
-    private static final long EXPIRATION_TIME_ACC_Token = 1000 * 60 * 60; // токен выдается на 60 минут
-    private static final long EXPIRATION_TIME_REF_Token = 1000 * 60 * 60 * 24 * 7; // токен выдается на 7 дней
+    private static final long EXPIRATION_TIME_ACC_Token = 1000 * 60 * 5; // токен выдается на 5 минут
+    private static final long EXPIRATION_TIME_REF_Token = 1000 * 60 * 60 * 2; // токен выдается на 2 часа
 
     public JwtTokenUtil(@Value("${jwt.secret}") String secret) {
         this.SECRET_KEY = Keys.hmacShaKeyFor(secret.getBytes());

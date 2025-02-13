@@ -1,4 +1,4 @@
-package com.aston.userservice.config;
+package com.aston.userservice.config.security;
 
 import com.aston.userservice.security.JwtAuthFilter;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/user-service/user").permitAll()
                         .requestMatchers(HttpMethod.POST,"/user-service/user/**").authenticated()
-                        .requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider)

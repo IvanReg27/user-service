@@ -1,7 +1,7 @@
 package com.aston.userservice.security;
 
 import com.aston.userservice.service.impl.UserServiceImpl;
-import com.aston.userservice.util.JwtTokenUtil;
+import com.aston.userservice.util.security.JwtTokenUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

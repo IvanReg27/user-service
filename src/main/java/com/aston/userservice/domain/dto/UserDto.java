@@ -2,9 +2,11 @@ package com.aston.userservice.domain.dto;
 
 import com.aston.userservice.security.Role;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -13,6 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class UserDto {
     private String firstName;
     private String lastName;

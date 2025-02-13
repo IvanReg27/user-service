@@ -1,6 +1,6 @@
-package com.aston.userservice.config;
+package com.aston.userservice.config.kafka;
 
-import com.aston.userservice.event.UserCreatedEvent;
+import com.aston.userservice.event.usercreated.UserCreatedEvent;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

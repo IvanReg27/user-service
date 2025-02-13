@@ -36,7 +36,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @ToString
-@Builder
+@Builder(toBuilder = true)
 public class User {
 
     @Id

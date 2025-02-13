@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.UUID;
 
@@ -27,6 +28,8 @@ class UserServiceTest extends PostgresTestContainer {
     private UserRepository userRepository;
     @Autowired
     private RequisitesRepository requisitesRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Test
     void findByLogin() {
@@ -37,8 +40,6 @@ class UserServiceTest extends PostgresTestContainer {
     }
 
     @Test
-    // @Transactional для загрузки связанной сущности user(по user_id) в одной сессии, иначе ошибка
-    @Transactional
     void getUserRequisitesById() {
         User savedUser = userRepository.save(TestConstantsUser.USER);
         Requisites requisites = TestConstantsRequisites.REQUISITES.toBuilder()

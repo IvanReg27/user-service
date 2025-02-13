@@ -34,8 +34,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final RequisitesRepository requisitesRepository;
-    private final KafkaProducerService kafkaProducerService;
-
+    private final KafkaProducerServiceImpl kafkaProducerServiceImpl;
     private final PasswordEncoder passwordEncoder;
 
 
@@ -103,7 +102,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             log.info("Пользователь успешно сохранен в БД с id: {}", userEntity.getId());
 
             // Создаем событие(сообщение) для Kafka, используя сгенерированный в БД userId
-            kafkaProducerService.sendUserCreatedEvent(userEntity);
+            kafkaProducerServiceImpl.sendUserCreatedEvent(userEntity);
 
             return userEntity.getId().toString();
 
