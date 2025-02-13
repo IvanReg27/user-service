@@ -18,7 +18,7 @@
         <spring-boot-starter-security.version>3.4.2</spring-boot-starter-security.version>
         <jjwt-api.version>0.11.5</jjwt-api.version>
         <jjwt-impl.version>0.11.5</jjwt-impl.version>
-        <jjwt-gson.version>0.11.5</jjwt-gson.version>
+        <jjwt-gson.version>0.12.6</jjwt-gson.version>
         <springdoc-openapi-starter-webmvc-ui.version>2.2.0</springdoc-openapi-starter-webmvc-ui.version>
         <postgresql.version>42.7.4</postgresql.version>
         <postgresql-testcontainers.version>1.20.4</postgresql-testcontainers.version>
