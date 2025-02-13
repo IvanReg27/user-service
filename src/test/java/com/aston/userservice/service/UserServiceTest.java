@@ -11,11 +11,9 @@ import com.aston.userservice.integration.cofig.IntegrationTest;
 import com.aston.userservice.integration.cofig.PostgresTestContainer;
 import com.aston.userservice.repository.RequisitesRepository;
 import com.aston.userservice.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.UUID;
 
@@ -28,8 +26,6 @@ class UserServiceTest extends PostgresTestContainer {
     private UserRepository userRepository;
     @Autowired
     private RequisitesRepository requisitesRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Test
     void findByLogin() {
