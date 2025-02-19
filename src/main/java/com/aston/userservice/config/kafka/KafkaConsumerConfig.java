@@ -1,4 +1,4 @@
-package com.aston.userservice.config;
+package com.aston.userservice.config.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
@@ -29,7 +29,7 @@ import java.util.Map;
  *
  */
 @Configuration
-public class KafkaConfigConsumer {
+public class KafkaConsumerConfig {
 
     @Autowired
     Environment environment;

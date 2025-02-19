@@ -14,6 +14,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,11 +30,13 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserServiceImp implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final UserRepository userRepository;
     private final RequisitesRepository requisitesRepository;
-    private final KafkaProducerService kafkaProducerService;
+    private final KafkaProducerServiceImpl kafkaProducerServiceImpl;
+    private final PasswordEncoder passwordEncoder;
+
 
     /**
      * Метод для получения пользователя по логину
@@ -71,7 +77,7 @@ public class UserServiceImp implements UserService {
     @Override
     public String createUser(UserDto userDto) {
         try {
-            //Реализация иденпотентности на уровне БД (перед сохранением в БД, проверяем, существует ли такой ИНН в БД)
+            //Реализация идемпотентности на уровне БД (перед сохранением в БД, проверяем, существует ли такой ИНН в БД)
             Optional<User> existingUser = userRepository.findByInn(userDto.getInn());
             if (existingUser.isPresent()) {
                 log.info("Пользователь с ИНН {} уже существует. Возвращаем существующий ID: {}",
@@ -87,7 +93,7 @@ public class UserServiceImp implements UserService {
                     .snils(userDto.getSnils())
                     .passportNumber(userDto.getPassportNumber())
                     .login(userDto.getLogin())
-                    .password(userDto.getPassword())
+                    .password(passwordEncoder.encode(userDto.getPassword()))
                     .roles(userDto.getRoles())
                     .build();
 
@@ -96,7 +102,7 @@ public class UserServiceImp implements UserService {
             log.info("Пользователь успешно сохранен в БД с id: {}", userEntity.getId());
 
             // Создаем событие(сообщение) для Kafka, используя сгенерированный в БД userId
-            kafkaProducerService.sendUserCreatedEvent(userEntity);
+            kafkaProducerServiceImpl.sendUserCreatedEvent(userEntity);
 
             return userEntity.getId().toString();
 
@@ -109,5 +115,26 @@ public class UserServiceImp implements UserService {
             log.error("Ошибка при создании нового пользователя: {}", e.getMessage(), e);
             throw new ServiceException("Ошибка при создании нового пользователя", e);
         }
+    }
+
+    /**
+     * Метод для создания объекта(пользователя) по логину для
+     * дальнейшего использования объета Spring Security для
+     * аутентификации
+     *
+     * @param username логин пользователя
+     * @return логин, пароль, роль
+     */
+    @Loggable
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        UserProjection user = userRepository.findByLogin(username)
+                .orElseThrow(() -> new UserNotFoundException("Пользователь не найден: " + username));
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getLogin(),
+                user.getPassword(),
+                user.getRoles()
+        );
     }
 }

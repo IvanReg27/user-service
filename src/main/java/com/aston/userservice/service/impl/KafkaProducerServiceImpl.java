@@ -1,7 +1,7 @@
 package com.aston.userservice.service.impl;
 
 import com.aston.userservice.domain.entity.User;
-import com.aston.userservice.event.UserCreatedEvent;
+import com.aston.userservice.event.usercreated.UserCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
@@ -18,7 +18,7 @@ import java.util.concurrent.ExecutionException;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class KafkaProducerService {
+public class KafkaProducerServiceImpl {
 
     private final KafkaTemplate<String, UserCreatedEvent> kafkaTemplate;
 
