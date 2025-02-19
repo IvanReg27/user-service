@@ -1,4 +1,4 @@
-package com.aston.userservice.event;
+package com.aston.userservice.event.usercreated;
 
 import com.aston.userservice.security.Role;
 import lombok.AllArgsConstructor;

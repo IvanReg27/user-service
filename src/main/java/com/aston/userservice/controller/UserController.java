@@ -15,6 +15,7 @@ import java.util.UUID;
 
 /**
  * Интерфейс для управления пользователем
+ *
  */
 @RequestMapping("/user-service")
 public interface UserController {
