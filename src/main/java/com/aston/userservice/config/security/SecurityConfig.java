@@ -34,6 +34,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/user-service/user").permitAll()
                         .requestMatchers(HttpMethod.POST,"/user-service/user/**").authenticated()
                         .requestMatchers("/auth/**").permitAll()
+                        //дописать ограничения для метода (получить всех пользователей из БД "/user-service/users")
                         .requestMatchers(HttpMethod.GET, "/user-service/users").permitAll()
                         .anyRequest().authenticated()
                 )

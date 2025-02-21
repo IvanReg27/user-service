@@ -35,6 +35,10 @@
         <log4j-api.version>2.24.3</log4j-api.version>
         <spring-boot-starter-aop.version>3.4.1</spring-boot-starter-aop.version>
         <spring-kafka.version>3.3.2</spring-kafka.version>
+        <spring-boot-starter-webflux.version>3.4.2</spring-boot-starter-webflux.version>
+        <spring-boot-starter-data-r2dbc.version>3.4.2</spring-boot-starter-data-r2dbc.version>
+        <r2dbc-postgresql.version>1.0.7.RELEASE</r2dbc-postgresql.version>
+        <reactor-test.version>3.7.3</reactor-test.version>
 
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -192,6 +196,31 @@
             <groupId>org.springframework.kafka</groupId>
             <artifactId>spring-kafka</artifactId>
             <version>${spring-kafka.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+            <version>${spring-boot-starter-webflux.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-r2dbc</artifactId>
+            <version>${spring-boot-starter-data-r2dbc.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>r2dbc-postgresql</artifactId>
+            <version>${r2dbc-postgresql.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.projectreactor</groupId>
+            <artifactId>reactor-test</artifactId>
+            <version>${reactor-test.version}</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>
