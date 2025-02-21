@@ -21,6 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,13 +38,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private final KafkaProducerServiceImpl kafkaProducerServiceImpl;
     private final PasswordEncoder passwordEncoder;
 
-
-    /**
-     * Метод для получения пользователя по логину
-     *
-     * @param login login
-     * @return пользователь
-     */
     @Loggable
     @Override
     public UserProjection findByLogin(String login) {
@@ -52,12 +46,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                         "Пользователь не найден по логину: " + login));
     }
 
-    /**
-     * Метод для получения реквизитов счета по id пользователя
-     *
-     * @param userId userId
-     * @return реквизиты счета
-     */
     @Loggable
     @Override
     public UserRequisitesProjection getUserRequisitesById(UUID userId) {
@@ -66,12 +54,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                         "Реквизиты счета не найдены по id пользователя: " + userId.toString())));
     }
 
-    /**
-     * Метод для сохранения пользователя в системе
-     *
-     * @param userDto пользователь системы
-     * @return пользователь
-     */
     @Transactional
     @Loggable
     @Override
@@ -117,14 +99,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
-    /**
-     * Метод для создания объекта(пользователя) по логину для
-     * дальнейшего использования объета Spring Security для
-     * аутентификации
-     *
-     * @param username логин пользователя
-     * @return логин, пароль, роль
-     */
     @Loggable
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -136,5 +110,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 user.getPassword(),
                 user.getRoles()
         );
+    }
+
+    @Loggable
+    @Override
+    public List<UserProjection> getAllUsers() {
+        return userRepository.findAllProjectedBy();
     }
 }

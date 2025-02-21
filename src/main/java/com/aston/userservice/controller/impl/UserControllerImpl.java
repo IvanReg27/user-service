@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -40,5 +41,11 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity<Object> createUser(@RequestBody UserDto userDto) {
         String userId = userService.createUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(userId);
+    }
+
+    @Loggable
+    @Override
+    public ResponseEntity<List<UserProjection>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 }

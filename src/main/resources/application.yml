@@ -8,7 +8,7 @@ spring:
     show-sql: true
 
   datasource:
-    url: jdbc:postgresql://${PSQL_DATASOURCE_URL:localhost}:5434/UserDB
+    url: jdbc:postgresql://${PSQL_DATASOURCE_URL:localhost:5434/UserDB}
     username: ${PSQL_DATASOURCE_USERNAME:postgres}
     password: ${PSQL_DATASOURCE_PASSWORD:postgres}
 
