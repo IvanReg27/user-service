@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,26 +28,25 @@ public class UserControllerImpl implements UserController {
 
     @Loggable
     @Override
-    public ResponseEntity<UserProjection> getUser(@PathVariable String login) {
-        return ResponseEntity.ok(userService.findByLogin(login));
+    public Mono<UserProjection> getUser(@PathVariable String login) {
+        return userService.findByLogin(login);
     }
 
     @Loggable
     @Override
-    public ResponseEntity<UserRequisitesProjection> getUserRequisites(@PathVariable UUID id) {
-        return ResponseEntity.ok(userService.getUserRequisitesById(id));
+    public Mono<UserRequisitesProjection> getUserRequisites(@PathVariable UUID id) {
+        return userService.getUserRequisitesById(id);
     }
 
     @Loggable
     @Override
-    public ResponseEntity<Object> createUser(@RequestBody UserDto userDto) {
-        String userId = userService.createUser(userDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(userId);
+    public Mono<String> createUser(@RequestBody UserDto userDto) {
+        return userService.createUser(userDto);
     }
 
     @Loggable
     @Override
-    public ResponseEntity<List<UserProjection>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+    public Flux<UserProjection> getAllUsers() {
+        return userService.getAllUsers();
     }
 }

@@ -2,11 +2,11 @@ package com.aston.userservice.repository;
 
 import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.projection.UserProjection;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -15,7 +15,7 @@ import java.util.UUID;
  * @see UserProjection
  */
 @Repository
-public interface UserRepository extends JpaRepository<User, UUID> {
+public interface UserRepository extends ReactiveCrudRepository<User, UUID> {
 
     /**
      * Метод для получения пользователя по login
@@ -23,7 +23,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
      * @param login login пользователя
      * @return пользователь с заданным login
      */
-    Optional<UserProjection> findByLogin(String login);
+    Mono<UserProjection> findByLogin(String login);
 
     /**
      * Метод для получения пользователя по Inn
@@ -31,12 +31,12 @@ public interface UserRepository extends JpaRepository<User, UUID> {
      * @param inn inn пользователя
      * @return пользователь с заданным inn
      */
-    Optional<User> findByInn(String inn);
+    Mono<User> findByInn(String inn);
 
     /**
      * Метод для получения списка всех пользователей
      *
      * @return список пользователей
      */
-    List<UserProjection> findAllUsersBy();
+    Flux<UserProjection> findAllUsersBy();
 }

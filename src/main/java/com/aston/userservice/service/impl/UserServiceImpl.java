@@ -20,8 +20,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -40,24 +41,23 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Loggable
     @Override
-    public UserProjection findByLogin(String login) {
+    public Mono<UserProjection> findByLogin(String login) {
         return userRepository.findByLogin(login)
-                .orElseThrow(() -> new UserNotFoundException(
-                        "Пользователь не найден по логину: " + login));
+                .switchIfEmpty(Mono.error(new UserNotFoundException("Пользователь не найден по логину: " + login)));
     }
 
     @Loggable
     @Override
-    public UserRequisitesProjection getUserRequisitesById(UUID userId) {
+    public Mono<UserRequisitesProjection> getUserRequisitesById(UUID userId) {
         return requisitesRepository.findByUserId(userId)
-                .orElseThrow(() -> new RequisitesNotFoundException(String.format(
-                        "Реквизиты счета не найдены по id пользователя: " + userId.toString())));
+                .switchIfEmpty(Mono.error(new RequisitesNotFoundException(String.format(
+                        "Реквизиты счета не найдены по id пользователя: " + userId.toString()))));
     }
 
     @Transactional
     @Loggable
     @Override
-    public String createUser(UserDto userDto) {
+    public Mono<String> createUser(UserDto userDto) {
         try {
             //Реализация идемпотентности на уровне БД (перед сохранением в БД, проверяем, существует ли такой ИНН в БД)
             Optional<User> existingUser = userRepository.findByInn(userDto.getInn());
@@ -114,7 +114,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Loggable
     @Override
-    public List<UserProjection> getAllUsers() {
+    public Flux<UserProjection> getAllUsers() {
         return userRepository.findAllUsersBy();
     }
 }

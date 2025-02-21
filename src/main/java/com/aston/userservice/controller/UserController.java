@@ -4,14 +4,14 @@ import com.aston.userservice.domain.dto.UserDto;
 import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -28,7 +28,7 @@ public interface UserController {
      * @return Информацию о пользователе {@link UserProjection}
      */
     @GetMapping("/user/{login}")
-    public ResponseEntity<UserProjection> getUser(@PathVariable String login);
+    public Mono<UserProjection> getUser(@PathVariable String login);
 
     /**
      * Метод для получения информации о счете по id пользователя
@@ -37,7 +37,7 @@ public interface UserController {
      * @return Информацию о счете {@link UserRequisitesProjection}
      */
     @GetMapping("/requisites/{id}")
-    public ResponseEntity<UserRequisitesProjection> getUserRequisites(@PathVariable UUID id);
+    public Mono<UserRequisitesProjection> getUserRequisites(@PathVariable UUID id);
 
     /**
      * Метод для сохранения нового пользователя в систему
@@ -45,7 +45,7 @@ public interface UserController {
      * @param userDto пользователь в системе {@link User}
      */
     @PostMapping("/user")
-    public ResponseEntity<Object> createUser(@RequestBody UserDto userDto);
+    public Mono<String> createUser(@RequestBody UserDto userDto);
 
     /**
      * Метод для получения списка всех пользователей
@@ -53,5 +53,5 @@ public interface UserController {
      * @return Список пользователей {@link UserProjection}
      */
     @GetMapping("/users")
-    public ResponseEntity<List<UserProjection>> getAllUsers();
+    public Flux<UserProjection> getAllUsers();
 }
