@@ -115,6 +115,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Loggable
     @Override
     public List<UserProjection> getAllUsers() {
-        return userRepository.findAllProjectedBy();
+        return userRepository.findAllUsersBy();
     }
 }

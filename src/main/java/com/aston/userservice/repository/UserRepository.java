@@ -1,11 +1,11 @@
 package com.aston.userservice.repository;
 
-import com.aston.userservice.domain.dto.UserDto;
 import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.projection.UserProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,4 +32,11 @@ public interface UserRepository extends JpaRepository<User, UUID> {
      * @return пользователь с заданным inn
      */
     Optional<User> findByInn(String inn);
+
+    /**
+     * Метод для получения списка всех пользователей
+     *
+     * @return список пользователей
+     */
+    List<UserProjection> findAllUsersBy();
 }
