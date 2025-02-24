@@ -4,6 +4,7 @@ import com.aston.userservice.annotation.Loggable;
 import com.aston.userservice.domain.request.security.AuthRequest;
 import com.aston.userservice.domain.request.security.RefreshTokenRequest;
 import com.aston.userservice.domain.response.security.AuthResponse;
+import com.aston.userservice.security.CustomAuthenticationManager;
 import com.aston.userservice.service.impl.UserServiceImpl;
 import com.aston.userservice.util.security.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ import reactor.core.publisher.Mono;
 @Slf4j
 public class AuthControllerImpl {
 
-    private final ReactiveAuthenticationManager authenticationManager;
+    private final CustomAuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
     private final UserServiceImpl userServiceImpl;
 

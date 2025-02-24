@@ -30,11 +30,12 @@ class UserServiceTest extends PostgresTestContainer {
 
     @Test
     void findByLogin() {
-        User savedUser = userRepository.save(TestConstantsUser.USER).block();
-        assertNotNull(savedUser);
+        StepVerifier.create(userRepository.save(TestConstantsUser.USER))
+                .expectNextMatches(savedUser -> savedUser != null)
+                .verifyComplete();
 
         StepVerifier.create(userService.findByLogin(TestConstantsUser.LOGIN_NAME))
-                .expectNextMatches(userProjection -> userProjection.getLogin().equals(savedUser.getLogin()))
+                .expectNextMatches(userProjection -> userProjection.getLogin().equals(TestConstantsUser.LOGIN_NAME))
                 .verifyComplete();
     }
 
