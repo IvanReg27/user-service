@@ -1,46 +1,42 @@
 package com.aston.userservice.config.security;
 
+import com.aston.userservice.security.CustomAuthenticationManager;
 import com.aston.userservice.security.JwtAuthFilter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 
-/**
- * Конфигурация безопасности, доступ пользователя к определенным ресурсам программы
- *
- */
 @Configuration
-@EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
-    private final AuthenticationProvider authenticationProvider;
+    private final CustomAuthenticationManager customAuthenticationManager;
+
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter, CustomAuthenticationManager customAuthenticationManager) {
+        this.jwtAuthFilter = jwtAuthFilter;
+        this.customAuthenticationManager = customAuthenticationManager;
+    }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/user-service/user").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/user-service/user/**").authenticated()
-                        .requestMatchers("/auth/**").permitAll()
-                        //дописать ограничения для метода (получить всех пользователей из БД "/user-service/users")
-                        .requestMatchers(HttpMethod.GET, "/user-service/users").permitAll()
-                        .anyRequest().authenticated()
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        return http
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .authenticationManager(customAuthenticationManager)
+                .authorizeExchange(auth -> auth
+                        .pathMatchers(HttpMethod.POST, "/user-service/user").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/user-service/user/**").authenticated()
+                        .pathMatchers("/auth/**").permitAll()
+                        .anyExchange().authenticated()
                 )
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(jwtAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+                .build();
+    }
 
-        return http.build();
+    @Bean
+    public ServerHttpSecurity serverHttpSecurity() {
+        return ServerHttpSecurity.http();
     }
 }

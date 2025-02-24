@@ -16,7 +16,7 @@
     <properties>
         <java.version>17</java.version>
 
-        <spring-boot-starter-security.version>3.4.2</spring-boot-starter-security.version>
+        <spring-boot-starter-security.version>3.4.3</spring-boot-starter-security.version>
         <jjwt-api.version>0.11.5</jjwt-api.version>
         <jjwt-impl.version>0.11.5</jjwt-impl.version>
         <jjwt-gson.version>0.11.5</jjwt-gson.version>
@@ -36,7 +36,7 @@
         <spring-boot-starter-aop.version>3.4.1</spring-boot-starter-aop.version>
         <spring-kafka.version>3.3.2</spring-kafka.version>
         <spring-boot-starter-webflux.version>3.4.2</spring-boot-starter-webflux.version>
-        <spring-boot-starter-data-r2dbc.version>3.4.2</spring-boot-starter-data-r2dbc.version>
+        <spring-boot-starter-data-r2dbc.version>3.0.1</spring-boot-starter-data-r2dbc.version>
         <r2dbc-postgresql.version>1.0.7.RELEASE</r2dbc-postgresql.version>
         <reactor-test.version>3.7.3</reactor-test.version>
 

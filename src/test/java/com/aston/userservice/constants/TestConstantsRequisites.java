@@ -11,6 +11,6 @@ public class TestConstantsRequisites {
             .inn("7807083893")
             .kpp("780701001")
             .kbk("18210102010011000110")
-            .user(TestConstantsUser.USER)
+            .userId(TestConstantsUser.USER.getId())
             .build();
 }

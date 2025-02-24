@@ -9,7 +9,7 @@ spring:
 
   datasource:
     r2dbc:
-      url: r2db:postgresql://${PSQL_DATASOURCE_URL:localhost:5434/UserDB}
+      url: r2dbc:postgresql://${PSQL_DATASOURCE_URL:localhost:5434/UserDB}
       username: ${PSQL_DATASOURCE_USERNAME:postgres}
       password: ${PSQL_DATASOURCE_PASSWORD:postgres}
 

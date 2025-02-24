@@ -1,6 +1,5 @@
 package com.aston.userservice.controller.impl;
 
-
 import com.aston.userservice.annotation.Loggable;
 import com.aston.userservice.domain.request.security.AuthRequest;
 import com.aston.userservice.domain.request.security.RefreshTokenRequest;
@@ -9,16 +8,14 @@ import com.aston.userservice.service.impl.UserServiceImpl;
 import com.aston.userservice.util.security.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
 
 /**
  * Контроллер, который обрабатывает вход пользователя
@@ -31,42 +28,36 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 public class AuthControllerImpl {
 
-    private final AuthenticationManager authenticationManager;
+    private final ReactiveAuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
     private final UserServiceImpl userServiceImpl;
 
     @Loggable
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody AuthRequest request) {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(request.getLogin(), request.getPassword()));
-
-            UserDetails userDetails = userServiceImpl.loadUserByUsername(request.getLogin());
-            String accessToken = jwtTokenUtil.generateToken(userDetails);
-            String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
-
-            return ResponseEntity.ok(new AuthResponse(accessToken, refreshToken));
-        } catch (BadCredentialsException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Неверный логин или пароль");
-        }
+    public Mono<AuthResponse> login(@RequestBody AuthRequest request) {
+        return authenticationManager.authenticate(
+                        new UsernamePasswordAuthenticationToken(request.getLogin(), request.getPassword())
+                ).flatMap(auth -> userServiceImpl.findByUsername(request.getLogin()))
+                .map(userDetails -> new AuthResponse(
+                        jwtTokenUtil.generateToken(userDetails),
+                        jwtTokenUtil.generateRefreshToken(userDetails)
+                ))
+                .onErrorResume(BadCredentialsException.class, e ->
+                        Mono.error(new RuntimeException("Неверный логин или пароль", e))
+                );
     }
 
     @Loggable
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest request) {
-        String refreshToken = request.getRefreshToken();
-
-        if (!jwtTokenUtil.validateRefreshToken(refreshToken)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Неверный или просроченный рефреш token");
-        }
-
-        String username = jwtTokenUtil.extractUsername(refreshToken);
-        UserDetails userDetails = userServiceImpl.loadUserByUsername(username);
-
-        String newAccessToken = jwtTokenUtil.generateToken(userDetails);
-        String newRefreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
-
-        return ResponseEntity.ok(new AuthResponse(newAccessToken, newRefreshToken));
+    public Mono<AuthResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
+        return Mono.just(request.getRefreshToken())
+                .filter(jwtTokenUtil::validateRefreshToken)
+                .switchIfEmpty(Mono.error(new RuntimeException("Неверный или просроченный рефреш token")))
+                .map(jwtTokenUtil::extractUsername)
+                .flatMap(userServiceImpl::findByUsername)
+                .map(userDetails -> new AuthResponse(
+                        jwtTokenUtil.generateToken(userDetails),
+                        jwtTokenUtil.generateRefreshToken(userDetails)
+                ));
     }
 }

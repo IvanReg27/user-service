@@ -14,16 +14,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -32,7 +30,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService, ReactiveUserDetailsService {
 
     private final UserRepository userRepository;
     private final RequisitesRepository requisitesRepository;
@@ -50,71 +48,67 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public Mono<UserRequisitesProjection> getUserRequisitesById(UUID userId) {
         return requisitesRepository.findByUserId(userId)
-                .switchIfEmpty(Mono.error(new RequisitesNotFoundException(String.format(
-                        "Реквизиты счета не найдены по id пользователя: " + userId.toString()))));
+                .switchIfEmpty(Mono.error(new RequisitesNotFoundException(
+                        "Реквизиты счета не найдены по id пользователя: " + userId)));
     }
 
     @Transactional
     @Loggable
     @Override
     public Mono<String> createUser(UserDto userDto) {
-        try {
-            //Реализация идемпотентности на уровне БД (перед сохранением в БД, проверяем, существует ли такой ИНН в БД)
-            Optional<User> existingUser = userRepository.findByInn(userDto.getInn());
-            if (existingUser.isPresent()) {
-                log.info("Пользователь с ИНН {} уже существует. Возвращаем существующий ID: {}",
-                        userDto.getInn(), existingUser.get().getId());
-                return existingUser.get().getId().toString();
-            }
+        return userRepository.findByInn(userDto.getInn())
+                .flatMap(existingUser -> {
+                    log.info("Пользователь с ИНН {} уже существует. Возвращаем существующий ID: {}", userDto.getInn(), existingUser.getId());
+                    return Mono.just(existingUser.getId().toString());
+                })
+                .switchIfEmpty(Mono.defer(() -> {
+                    User userEntity = User.builder()
+                            .firstName(userDto.getFirstName())
+                            .lastName(userDto.getLastName())
+                            .birthday(userDto.getBirthday())
+                            .inn(userDto.getInn())
+                            .snils(userDto.getSnils())
+                            .passportNumber(userDto.getPassportNumber())
+                            .login(userDto.getLogin())
+                            .password(passwordEncoder.encode(userDto.getPassword()))
+                            .roles(userDto.getRoles())
+                            .build();
 
-            User userEntity = User.builder()
-                    .firstName(userDto.getFirstName())
-                    .lastName(userDto.getLastName())
-                    .birthday(userDto.getBirthday())
-                    .inn(userDto.getInn())
-                    .snils(userDto.getSnils())
-                    .passportNumber(userDto.getPassportNumber())
-                    .login(userDto.getLogin())
-                    .password(passwordEncoder.encode(userDto.getPassword()))
-                    .roles(userDto.getRoles())
-                    .build();
-
-            userEntity = userRepository.save(userEntity);
-            userRepository.flush();
-            log.info("Пользователь успешно сохранен в БД с id: {}", userEntity.getId());
-
-            // Создаем событие(сообщение) для Kafka, используя сгенерированный в БД userId
-            kafkaProducerServiceImpl.sendUserCreatedEvent(userEntity);
-
-            return userEntity.getId().toString();
-
-        } catch (DataIntegrityViolationException e) {
-            log.warn("Попытка создать дубликат пользователя с ИНН {}", userDto.getInn());
-            Optional<User> existingUser = userRepository.findByInn(userDto.getInn());
-            return existingUser.map(user -> user.getId().toString()).orElseThrow(() ->
-                    new ServiceException("Ошибка при проверке существующего пользователя", e));
-        } catch (Exception e) {
-            log.error("Ошибка при создании нового пользователя: {}", e.getMessage(), e);
-            throw new ServiceException("Ошибка при создании нового пользователя", e);
-        }
-    }
-
-    @Loggable
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserProjection user = userRepository.findByLogin(username)
-                .orElseThrow(() -> new UserNotFoundException("Пользователь не найден: " + username));
-
-        return new org.springframework.security.core.userdetails.User(
-                user.getLogin(),
-                user.getPassword(),
-                user.getRoles()
-        );
+                    return userRepository.save(userEntity)
+                            .flatMap(savedUser -> {
+                                log.info("Пользователь успешно сохранен в БД с id: {}", savedUser.getId());
+                                kafkaProducerServiceImpl.sendUserCreatedEvent(savedUser);
+                                return Mono.just(savedUser.getId().toString());
+                            });
+                })).onErrorMap(DataIntegrityViolationException.class, e -> {
+                    log.warn("Попытка создать дубликат пользователя с ИНН {}", userDto.getInn());
+                    return new ServiceException("Ошибка при создании нового пользователя", e);
+                });
     }
 
     @Loggable
     @Override
     public Flux<UserProjection> getAllUsers() {
         return userRepository.findAllUsersBy();
+    }
+
+    /**
+     * Метод для создания объекта(пользователя) по логину для
+     * дальнейшего использования объета Spring Security для
+     * аутентификации
+     *
+     * @param username логин пользователя
+     * @return логин, пароль, роль
+     */
+    @Loggable
+    @Override
+    public Mono<UserDetails> findByUsername(String username) {
+        return userRepository.findByLogin(username)
+                .switchIfEmpty(Mono.error(new UserNotFoundException("Пользователь не найден: " + username)))
+                .map(user -> new org.springframework.security.core.userdetails.User(
+                        user.getLogin(),
+                        user.getPassword(),
+                        user.getRoles()
+                ));
     }
 }
