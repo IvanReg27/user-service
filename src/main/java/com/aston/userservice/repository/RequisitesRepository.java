@@ -12,10 +12,10 @@ import java.util.UUID;
 public interface RequisitesRepository extends ReactiveCrudRepository<Requisites, UUID> {
 
     /**
-     * Метод для получения пользователя по id
+     * Метод для получения информации о счете по id пользователя
      *
-     * @param userId userId пользователя
-     * @return пользователь с заданным id в виде проекции
+     * @param userId Id пользователя
+     * @return Информацию о счете {@link UserRequisitesProjection}
      */
     @Query("SELECT u.first_name AS firstName, TRIM(r.account_number) AS accountNumber, TRIM(r.kbk) AS kbk " +
             "FROM requisites r JOIN users u ON r.user_id = u.id WHERE u.id = :userId")
