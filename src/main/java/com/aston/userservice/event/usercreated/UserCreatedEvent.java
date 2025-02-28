@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 
@@ -38,5 +39,5 @@ public class UserCreatedEvent {
 
     private String password;
 
-    private Set<Role> roles;
+    private List<String> roles;
 }

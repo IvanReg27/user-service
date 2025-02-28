@@ -7,14 +7,19 @@ spring:
       ddl-auto: update
     show-sql: true
 
-  datasource:
-    r2dbc:
-      url: r2dbc:postgresql://${PSQL_DATASOURCE_URL:localhost:5434/UserDB}
-      username: ${PSQL_DATASOURCE_USERNAME:postgres}
-      password: ${PSQL_DATASOURCE_PASSWORD:postgres}
+  # R2DBC - используется для работы с базой в приложении
+  r2dbc:
+    url: r2dbc:postgresql://${PSQL_DATASOURCE_URL:localhost}:5434/UserDB
+    username: ${PSQL_DATASOURCE_USERNAME:postgres}
+    password: ${PSQL_DATASOURCE_PASSWORD:postgres}
 
+  # JDBC - используется Liquibase
   liquibase:
+    enabled: true
     change-log: db.migration/db.changelog-master.xml
+    url: jdbc:postgresql://localhost:5434/UserDB
+    user: postgres
+    password: postgres
 
   kafka:
     bootstrap-servers: localhost:9092,localhost:9094,localhost:9096
@@ -32,8 +37,6 @@ spring:
 
     consumer:
       group-id: user-created-events # Консьюмер ГРУППА
-#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-#      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "com.aston.userservice.event"
 

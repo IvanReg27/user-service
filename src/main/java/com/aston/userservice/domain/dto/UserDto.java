@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -24,5 +24,5 @@ public class UserDto {
     private String passportNumber;
     private String login;
     private String password;
-    private Set<Role> roles;
+    private List<String> roles;
 }

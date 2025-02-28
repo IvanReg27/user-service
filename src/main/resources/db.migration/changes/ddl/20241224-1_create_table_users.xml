@@ -25,10 +25,10 @@
             <column name="birthday" type="DATE">
                 <constraints nullable="false"/>
             </column>
-            <column name="INN" type="CHAR(12)">
+            <column name="inn" type="CHAR(12)">
                 <constraints nullable="false"/>
             </column>
-            <column name="SNILS" type="CHAR(11)">
+            <column name="snils" type="CHAR(11)">
                 <constraints nullable="false"/>
             </column>
             <column name="passport_number" type="CHAR(10)">
