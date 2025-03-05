@@ -33,7 +33,7 @@ public class SecurityConfig {
                         .pathMatchers("/auth/**").permitAll()
                         .anyExchange().authenticated()
                 )
-                .addFilterAt(jwtAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION) // Добавляем фильтр для аутентификации
+                .addFilterAt(jwtAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .build();
     }
 }
