@@ -5,11 +5,13 @@ import com.aston.userservice.security.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 
 @Configuration
+@EnableWebFluxSecurity
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
@@ -29,14 +31,9 @@ public class SecurityConfig {
                         .pathMatchers(HttpMethod.POST, "/user-service/user").permitAll()
                         .pathMatchers(HttpMethod.POST, "/user-service/user/**").authenticated()
                         .pathMatchers("/auth/**").permitAll()
-                        .anyExchange().authenticated()
+                        .anyExchange().permitAll()
                 )
-                .addFilterAt(jwtAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+                .addFilterAt(jwtAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION) // Добавляем фильтр для аутентификации
                 .build();
-    }
-
-    @Bean
-    public ServerHttpSecurity serverHttpSecurity() {
-        return ServerHttpSecurity.http();
     }
 }

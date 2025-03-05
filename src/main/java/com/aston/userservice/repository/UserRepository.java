@@ -2,6 +2,7 @@ package com.aston.userservice.repository;
 
 import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.projection.UserProjection;
+import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
