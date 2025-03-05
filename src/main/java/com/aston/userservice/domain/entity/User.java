@@ -12,7 +12,6 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -48,5 +47,5 @@ public class User {
     private String password;
 
     @Column("role")
-    private List<String> roles;
+    private Set<Role> roles;
 }

@@ -7,13 +7,13 @@ spring:
       ddl-auto: update
     show-sql: true
 
-  # R2DBC - используется для работы с базой в приложении
+  # R2DBC - используется для работы с БД в приложении
   r2dbc:
     url: r2dbc:postgresql://${PSQL_DATASOURCE_URL:localhost}:5434/UserDB
     username: ${PSQL_DATASOURCE_USERNAME:postgres}
     password: ${PSQL_DATASOURCE_PASSWORD:postgres}
 
-  # JDBC - используется Liquibase
+  # JDBC - используется для Liquibase
   liquibase:
     enabled: true
     change-log: db.migration/db.changelog-master.xml

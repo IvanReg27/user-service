@@ -6,6 +6,7 @@ import com.aston.userservice.security.Role;
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public class TestConstantsUser {
@@ -21,6 +22,6 @@ public class TestConstantsUser {
             .passportNumber("0708567890")
             .login(LOGIN_NAME)
             .password("password1")
-            .roles(List.of("USER", "ADMIN"))
+            .roles(new HashSet<>(List.of(Role.USER, Role.ADMIN)))
             .build();
 }
