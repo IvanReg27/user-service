@@ -16,7 +16,7 @@ import java.util.UUID;
  * @see UserProjection
  */
 @Repository
-public interface UserRepository extends R2dbcRepository<User, UUID> {
+    public interface UserRepository extends R2dbcRepository<User, UUID> {
 
     /**
      * Метод для получения пользователя по login
@@ -24,6 +24,10 @@ public interface UserRepository extends R2dbcRepository<User, UUID> {
      * @param login login пользователя
      * @return пользователь с заданным login
      */
+    @Query(
+            "SELECT u.first_name, u.last_name, u.birthday, u.inn, u.snils, u.passport_number, u.login, " +
+                    "u.password, r.role FROM users u INNER JOIN user_roles r ON u.id = r.user_id WHERE " +
+                    "u.login = :login")
     Mono<UserProjection> findByLogin(String login);
 
     /**
@@ -39,5 +43,8 @@ public interface UserRepository extends R2dbcRepository<User, UUID> {
      *
      * @return список пользователей
      */
+    @Query(
+            "SELECT u.first_name, u.last_name, u.birthday, u.inn, u.snils, u.passport_number, u.login, " +
+                    "u.password, r.role FROM users u INNER JOIN user_roles r ON u.id = r.user_id")
     Flux<UserProjection> findAllUsersBy();
 }
