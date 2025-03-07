@@ -25,7 +25,7 @@ import java.util.UUID;
 public class Requisites {
 
     @Id
-    private UUID id;
+    private Long id;
 
     private String accountNumber;
 
@@ -40,5 +40,5 @@ public class Requisites {
     private String kbk;
 
     @Column("user_id")
-    private UUID userId;
+    private Long userId;
 }

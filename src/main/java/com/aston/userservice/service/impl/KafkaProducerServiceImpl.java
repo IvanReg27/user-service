@@ -4,7 +4,7 @@ import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.event.usercreated.UserCreatedEvent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.service.spi.ServiceException;
+import org.apache.kafka.shaded.com.google.protobuf.ServiceException;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
@@ -47,7 +47,7 @@ public class KafkaProducerServiceImpl {
 
         } catch (ExecutionException | InterruptedException e) {
             log.error("Ошибка при отправке сообщения в брокер: {}", e.getMessage(), e);
-            throw new ServiceException("Ошибка при отправке события о создании нового пользователя", e);
+            throw new RuntimeException("Ошибка при отправке события о создании нового пользователя", e);
         }
     }
 }

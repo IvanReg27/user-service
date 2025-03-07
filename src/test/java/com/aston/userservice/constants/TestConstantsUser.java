@@ -13,7 +13,6 @@ public class TestConstantsUser {
 
     public static final String LOGIN_NAME = "ivan";
     public static final User USER = User.builder()
-            .id(UUID.randomUUID())
             .firstName("Иван")
             .lastName("Петров")
             .birthday(LocalDate.of(1990, 1, 1))

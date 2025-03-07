@@ -53,11 +53,11 @@ class UserServiceImplTest {
     @BeforeEach
     void setUp() {
         userId = UUID.randomUUID();
-        user = new User();
-        user.setId(userId);
-        user.setLogin("Boris");
-        user.setPassword("password123");
-        user.setInn("783456789088");
+//        user = new User();
+//        user.setId(userId);
+//        user.setLogin("Boris");
+//        user.setPassword("password123");
+//        user.setInn("783456789088");
 
         userDto = new UserDto();
         userDto.setLogin("Boris");

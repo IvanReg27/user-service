@@ -12,7 +12,7 @@
         </preConditions>
 
         <createTable tableName="requisites">
-            <column name="id" type="UUID">
+            <column name="id" type="serial">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="account_number" type="CHAR(30)">
@@ -33,7 +33,7 @@
             <column name="kbk" type="CHAR(20)">
                 <constraints nullable="false"/>
             </column>
-            <column name="user_id" type="UUID">
+            <column name="user_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
         </createTable>

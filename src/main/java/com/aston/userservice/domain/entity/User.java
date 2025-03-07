@@ -1,19 +1,13 @@
 package com.aston.userservice.domain.entity;
 
 import com.aston.userservice.security.Role;
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
@@ -26,15 +20,14 @@ import java.util.UUID;
  */
 @Table("users")
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @ToString
-@Builder(toBuilder = true)
+//@Builder(toBuilder = true)
 public class User {
 
     @Id
-    private UUID id;
+    private Long id;
 
     private String firstName;
 
@@ -52,6 +45,19 @@ public class User {
 
     private String password;
 
+    public User( String firstName, String lastName, LocalDate birthday, String inn, String snils, String passportNumber, String login, String password, Set<Role> roles) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.birthday = birthday;
+        this.inn = inn;
+        this.snils = snils;
+        this.passportNumber = passportNumber;
+        this.login = login;
+        this.password = password;
+        this.roles = roles;
+    }
+
+    @Transient
     @Column("role")
     private Set<Role> roles;
 }

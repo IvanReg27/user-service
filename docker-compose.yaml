@@ -12,6 +12,15 @@ services:
     ports:
       - "5434:5432"
 
+  # UI для Kafka
+  kafka-ui:
+    container_name: kafka-ui
+    image: provectuslabs/kafka-ui:latest
+    ports:
+      - "8084:8080"
+    environment:
+      DYNAMIC_CONFIG_ENABLED: true
+
   # Используется KRaft-режим(вместо ZooKeeper), кластер из трёх брокеров
   kafka-1:
     image: confluentinc/cp-kafka:7.8.0

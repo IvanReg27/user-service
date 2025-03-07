@@ -13,7 +13,7 @@
         </preConditions>
 
         <createTable tableName="users">
-            <column name="id" type="UUID">
+            <column name="id" type="serial">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="first_name" type="VARCHAR(30)">
@@ -45,7 +45,7 @@
 
     <changeSet id="20241224-1_create_table_users_roles" author="i.makhorin">
         <createTable tableName="user_roles">
-            <column name="user_id" type="UUID">
+            <column name="user_id" type="bigint">
                 <constraints nullable="false"/>
             </column>
             <column name="role" type="varchar(15)">
