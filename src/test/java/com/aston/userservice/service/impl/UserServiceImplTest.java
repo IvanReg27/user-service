@@ -8,6 +8,8 @@ import com.aston.userservice.exception.RequisitesNotFoundException;
 import com.aston.userservice.exception.UserNotFoundException;
 import com.aston.userservice.repository.RequisitesRepository;
 import com.aston.userservice.repository.UserRepository;
+import com.aston.userservice.repository.UserRoleRepository;
+import com.aston.userservice.security.Role;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,11 +17,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
+import java.time.LocalDate;
 import java.util.Collections;
+import java.util.HashSet;
 
+import static org.mockito.ArgumentMatchers.anyIterable;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
@@ -41,6 +47,9 @@ class UserServiceImplTest {
     @Mock
     private UserProjection userProjection;
 
+    @Mock
+    private UserRoleRepository userRoleRepository;
+
     @InjectMocks
     private UserServiceImpl userService;
 
@@ -54,6 +63,23 @@ class UserServiceImplTest {
         userDto.setLogin("Boris");
         userDto.setPassword("password123");
         userDto.setInn("783456789088");
+
+        userId = 1L;
+        Role userRole = Role.USER;
+        userDto.setRoles(new HashSet<>(Collections.singletonList(userRole)));
+
+        user = User.builder()
+                .id(userId)
+                .firstName("Boris")
+                .lastName("Ivanov")
+                .birthday(LocalDate.of(1980, 1, 1))
+                .inn("783456789088")
+                .snils("123-456-789 01")
+                .passportNumber("AB1234567")
+                .login("Boris")
+                .password("Зашифрованный пароль")
+                .roles(new HashSet<>(Collections.singletonList(userRole)))  // Добавляем роль в User
+                .build();
     }
 
     // Позитивный сценарий
@@ -101,9 +127,11 @@ class UserServiceImplTest {
     // Позитивный сценарий
     @Test
     void createUser_NewUserTest() {
+        // Мокаем поведение репозиториев
         when(userRepository.findByInn("783456789088")).thenReturn(Mono.empty());
         when(passwordEncoder.encode(anyString())).thenReturn("Зашифрованный пароль");
         when(userRepository.save(any(User.class))).thenReturn(Mono.just(user));
+        when(userRoleRepository.saveAll(anyIterable())).thenReturn(Flux.empty());
 
         StepVerifier.create(userService.createUser(userDto))
                 .expectNext(userId.toString())
