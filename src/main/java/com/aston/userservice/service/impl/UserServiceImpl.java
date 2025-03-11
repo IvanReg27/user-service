@@ -11,7 +11,6 @@ import com.aston.userservice.exception.UserNotFoundException;
 import com.aston.userservice.repository.RequisitesRepository;
 import com.aston.userservice.repository.UserRepository;
 import com.aston.userservice.repository.UserRoleRepository;
-import com.aston.userservice.security.Role;
 import com.aston.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,8 +25,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
-import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -53,7 +50,7 @@ public class UserServiceImpl implements UserService, ReactiveUserDetailsService 
 
     @Loggable
     @Override
-    public Mono<UserRequisitesProjection> getUserRequisitesById(UUID userId) {
+    public Mono<UserRequisitesProjection> getUserRequisitesById(Long userId) {
         return requisitesRepository.findByUserId(userId)
                 .switchIfEmpty(Mono.error(new RequisitesNotFoundException(
                         "Реквизиты счета не найдены по id пользователя: " + userId)));
@@ -72,18 +69,17 @@ public class UserServiceImpl implements UserService, ReactiveUserDetailsService 
                 })
                 .switchIfEmpty(Mono.defer(() -> {
                     // Создаем нового пользователя, если не найдено совпадений по ИНН
-                    User userEntity = new User(
-                            userDto.getFirstName(),
-                            userDto.getLastName(),
-                            userDto.getBirthday(),
-                            userDto.getInn(),
-                            userDto.getSnils(),
-                            userDto.getPassportNumber(),
-                            userDto.getLogin(),
-                            passwordEncoder.encode(userDto.getPassword()),
-                            userDto.getRoles());
-//                            .id(UUID.randomUUID())
-
+                    User userEntity = User.builder()
+                            .firstName(userDto.getFirstName())
+                            .lastName(userDto.getLastName())
+                            .birthday(userDto.getBirthday())
+                            .inn(userDto.getInn())
+                            .snils(userDto.getSnils())
+                            .passportNumber(userDto.getPassportNumber())
+                            .login(userDto.getLogin())
+                            .password(passwordEncoder.encode(userDto.getPassword()))
+                            .roles(userDto.getRoles())
+                            .build();
 
                     return userRepository.save(userEntity)
                             .flatMap(savedUser -> {

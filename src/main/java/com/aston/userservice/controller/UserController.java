@@ -37,7 +37,7 @@ public interface UserController {
      * @return Информацию о счете {@link UserRequisitesProjection}
      */
     @GetMapping("/requisites/{id}")
-    public Mono<UserRequisitesProjection> getUserRequisites(@PathVariable UUID id);
+    public Mono<UserRequisitesProjection> getUserRequisites(@PathVariable Long id);
 
     /**
      * Метод для сохранения нового пользователя в систему

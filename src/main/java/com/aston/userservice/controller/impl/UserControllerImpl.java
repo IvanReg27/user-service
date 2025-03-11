@@ -31,7 +31,7 @@ public class UserControllerImpl implements UserController {
 
     @Loggable
     @Override
-    public Mono<UserRequisitesProjection> getUserRequisites(@PathVariable UUID id) {
+    public Mono<UserRequisitesProjection> getUserRequisites(@PathVariable Long id) {
         return userService.getUserRequisitesById(id);
     }
 

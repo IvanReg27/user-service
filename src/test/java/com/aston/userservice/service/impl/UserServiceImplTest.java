@@ -15,12 +15,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
 import java.util.Collections;
-import java.util.UUID;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
@@ -48,17 +46,10 @@ class UserServiceImplTest {
 
     private User user;
     private UserDto userDto;
-    private UUID userId;
+    private Long userId;
 
     @BeforeEach
     void setUp() {
-        userId = UUID.randomUUID();
-//        user = new User();
-//        user.setId(userId);
-//        user.setLogin("Boris");
-//        user.setPassword("password123");
-//        user.setInn("783456789088");
-
         userDto = new UserDto();
         userDto.setLogin("Boris");
         userDto.setPassword("password123");

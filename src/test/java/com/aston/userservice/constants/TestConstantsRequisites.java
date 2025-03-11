@@ -7,7 +7,6 @@ import java.util.UUID;
 public class TestConstantsRequisites {
 
     public static final Requisites REQUISITES = Requisites.builder()
-            .id(UUID.randomUUID())
             .accountNumber("12345678901234567890")
             .bik("044525225")
             .correspondentCheck("30101810400000000225")

@@ -27,7 +27,7 @@ public interface UserService {
      * @param userId userId пользователя
      * @return реквизиты
      */
-    Mono<UserRequisitesProjection> getUserRequisitesById(UUID userId);
+    Mono<UserRequisitesProjection> getUserRequisitesById(Long userId);
 
     /**
      * Метод для сохранения пользователя в системе

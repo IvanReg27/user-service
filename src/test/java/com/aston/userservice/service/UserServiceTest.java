@@ -82,7 +82,7 @@ class UserServiceTest extends PostgresTestContainer {
 
     @Test
     void getUserRequisitesByIdThrowsExceptionIfNotFound() {
-        UUID nonExistentUserId = UUID.randomUUID();
+        Long nonExistentUserId = 999L;
 
         StepVerifier.create(userService.getUserRequisitesById(nonExistentUserId))
                 .expectErrorMatches(throwable -> throwable instanceof RequisitesNotFoundException &&
