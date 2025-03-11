@@ -11,12 +11,12 @@ import reactor.core.publisher.Mono;
 import java.util.UUID;
 
 @Repository
-public interface UserRoleRepository extends R2dbcRepository<UserRole, UUID> {
+public interface UserRoleRepository extends R2dbcRepository<UserRole, Long> {
 
     @Query("SELECT role FROM user_roles WHERE user_id = :userId")
-    Flux<String> findRolesByUserId(UUID userId);
+    Flux<String> findRolesByUserId(Long userId);
 
     @Modifying
     @Query("INSERT INTO user_roles (user_id, role) VALUES (:userId, :role)")
-    Mono<Void> saveRole(UUID userId, String role);
+    Mono<Void> saveRole(Long userId, String role);
 }
