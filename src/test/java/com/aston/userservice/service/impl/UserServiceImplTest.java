@@ -154,6 +154,29 @@ class UserServiceImplTest {
 
     // Позитивный сценарий
     @Test
+    void getAllUsers_UserExistsTest() {
+        UserProjection userProjection1 = mock(UserProjection.class);
+        UserProjection userProjection2 = mock(UserProjection.class);
+
+        when(userRepository.findAllUsersBy()).thenReturn(Flux.just(userProjection1, userProjection2));
+
+        StepVerifier.create(userService.getAllUsers())
+                .expectNext(userProjection1, userProjection2)
+                .verifyComplete();
+    }
+
+    // Негативный сценарий
+    @Test
+    void getAllUsers_UsersNotFoundTest() {
+        when(userRepository.findAllUsersBy()).thenReturn(Flux.empty());
+
+        StepVerifier.create(userService.getAllUsers())
+                .expectNextCount(0)
+                .verifyComplete();
+    }
+
+    // Позитивный сценарий
+    @Test
     void loadUserByUsername_UserExistsTest() {
         when(userRepository.findByLogin("Boris")).thenReturn(Mono.just(userProjection));
         when(userProjection.getLogin()).thenReturn("Boris");

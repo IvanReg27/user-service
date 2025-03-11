@@ -15,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.util.UUID;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -38,34 +36,39 @@ class UserServiceTest extends PostgresTestContainer {
         requisitesRepository.deleteAll().block();
     }
 
-//    @Test
-//    void findByLogin() {
-//        User user = TestConstantsUser.USER.toBuilder().id(UUID.randomUUID()).build();
-//        StepVerifier.create(userRepository.save(user))
-//                .expectNextMatches(savedUser -> savedUser.getLogin().equals(TestConstantsUser.LOGIN_NAME))
-//                .verifyComplete();
-//
-//        StepVerifier.create(userService.findByLogin(TestConstantsUser.LOGIN_NAME))
-//                .expectNextMatches(userProjection -> userProjection.getLogin().equals(TestConstantsUser.LOGIN_NAME))
-//                .verifyComplete();
-//    }
-//
+    @Test
+    void findByLogin() {
+        User user = TestConstantsUser.USER.toBuilder().build();
+        User savedUser = userRepository.save(user).block();
+        assertNotNull(savedUser, "User должен быть успешно сохранен");
+
+        StepVerifier.create(userService.findByLogin(TestConstantsUser.LOGIN_NAME))
+                .expectNextMatches(userProjection -> userProjection.getLogin().equals(TestConstantsUser.LOGIN_NAME))
+                .verifyComplete();
+    }
+
 //    @Test
 //    void getUserRequisitesById() {
-//        User user = TestConstantsUser.USER.toBuilder().id(UUID.randomUUID()).build();
+//        // Создаем пользователя
+//        User user = TestConstantsUser.USER.toBuilder().build();
 //        Mono<User> savedUserMono = userRepository.save(user);
 //
+//        // Сохраняем пользователя и создаем реквизиты для него
 //        StepVerifier.create(savedUserMono)
 //                .assertNext(savedUser -> {
-//                    assertNotNull(savedUser);
+//                    assertNotNull(savedUser, "Сохраненный пользователь не должен быть null");
+//
+//                    // Создаем реквизиты для сохраненного пользователя
 //                    Requisites requisites = TestConstantsRequisites.REQUISITES.toBuilder()
-//                            .id(UUID.randomUUID())
-//                            .userId(savedUser.getId())
+//                            .userId(savedUser.getId()) // Используем ID сохраненного пользователя
 //                            .build();
+//
+//                    // Сохраняем реквизиты
 //                    StepVerifier.create(requisitesRepository.save(requisites))
 //                            .assertNext(savedRequisites -> {
-//                                assertNotNull(savedRequisites);
+//                                assertNotNull(savedRequisites, "Реквизиты не должны быть null");
 //
+//                                // Проверяем получение реквизитов через сервис
 //                                StepVerifier.create(userService.getUserRequisitesById(savedUser.getId()))
 //                                        .assertNext(response -> {
 //                                            assertNotNull(response, "Ответ не должен быть пустым");
