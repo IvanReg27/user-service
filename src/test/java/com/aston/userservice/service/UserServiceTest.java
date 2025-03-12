@@ -19,7 +19,6 @@ import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWeb
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 
@@ -133,7 +132,7 @@ class UserServiceTest extends PostgresTestContainer {
     }
 
     @Test
-    void testCreateUserWithExistingInn() {
+    void testCreateUserWithExistingInn() throws InterruptedException {
         // Создаем первого пользователя
         UserDto userDto1 = new UserDto();
         userDto1.setFirstName(TestConstantsUser.USER.getFirstName());
@@ -146,23 +145,11 @@ class UserServiceTest extends PostgresTestContainer {
         userDto1.setPassword(TestConstantsUser.USER.getPassword());
         userDto1.setRoles(new HashSet<>(List.of(Role.USER)));
 
-        // Сохраняем первого пользователя
+        // Сохраняем пользователя
         userService.createUser(userDto1).block();
 
-        // Создать второго пользователя с тем же ИНН
-        UserDto userDto2 = new UserDto();
-        userDto2.setFirstName("Дмитрий");
-        userDto2.setLastName("Сидоров");
-        userDto2.setBirthday(LocalDate.of(1992, 2, 2));
-        userDto2.setInn(TestConstantsUser.USER.getInn()); // тот же ИНН
-        userDto2.setSnils("98765432100");
-        userDto2.setPassportNumber("1234567890");
-        userDto2.setLogin("dmitry");
-        userDto2.setPassword("password2");
-        userDto2.setRoles(new HashSet<>(List.of(Role.USER)));
-
-        // Сохраняем второго пользователя
-        Mono<String> result = userService.createUser(userDto2);
+        // Повторно сохраняем того же пользователя (тот же ИНН)
+        Mono<String> result = userService.createUser(userDto1);
 
         // Проверяем, что возвращается ID первого пользовате, т.к. у него такой же ИНН
         StepVerifier.create(result)

@@ -78,8 +78,9 @@ class UserServiceImplTest {
                 .passportNumber("AB1234567")
                 .login("Boris")
                 .password("Зашифрованный пароль")
-                .roles(new HashSet<>(Collections.singletonList(userRole)))  // Добавляем роль в User
                 .build();
+
+        user.setRoles(new HashSet<>(Collections.singletonList(userRole)));
     }
 
     // Позитивный сценарий

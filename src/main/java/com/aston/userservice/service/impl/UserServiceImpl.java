@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService, ReactiveUserDetailsService 
                         "Реквизиты счета не найдены по id пользователя: " + userId)));
     }
 
-//    @Transactional
+    //    @Transactional
     @Loggable
     @Override
     public Mono<String> createUser(UserDto userDto) {
@@ -78,8 +78,8 @@ public class UserServiceImpl implements UserService, ReactiveUserDetailsService 
                             .passportNumber(userDto.getPassportNumber())
                             .login(userDto.getLogin())
                             .password(passwordEncoder.encode(userDto.getPassword()))
-                            .roles(userDto.getRoles())
                             .build();
+                    userEntity.setRoles(userDto.getRoles());
 
                     return userRepository.save(userEntity)
                             .flatMap(savedUser -> {

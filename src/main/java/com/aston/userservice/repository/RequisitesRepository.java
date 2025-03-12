@@ -18,7 +18,7 @@ public interface RequisitesRepository extends R2dbcRepository<Requisites, UUID> 
      * @param userId Id пользователя
      * @return Информацию о счете {@link UserRequisitesProjection}
      */
-    @Query("SELECT u.first_name AS firstName, TRIM(r.account_number) AS accountNumber, TRIM(r.kbk) AS kbk " +
-            "FROM requisites r JOIN users u ON r.user_id = u.id WHERE u.id = :userId")
+    @Query("SELECT u.first_name, r.account_number, r.kbk " +
+            "FROM requisites r INNER JOIN users u ON r.user_id = u.id WHERE u.id = :userId")
     Mono<UserRequisitesProjection> findByUserId(Long userId);
 }
