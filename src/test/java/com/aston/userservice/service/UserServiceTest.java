@@ -47,6 +47,7 @@ class UserServiceTest extends PostgresTestContainer {
 
     @Test
     void testCreateUser() {
+        // Cоздаем пользователя
         UserDto userDto = new UserDto();
         userDto.setFirstName(TestConstantsUser.USER.getFirstName());
         userDto.setLastName(TestConstantsUser.USER.getLastName());
@@ -56,8 +57,9 @@ class UserServiceTest extends PostgresTestContainer {
         userDto.setPassportNumber(TestConstantsUser.USER.getPassportNumber());
         userDto.setLogin(TestConstantsUser.USER.getLogin());
         userDto.setPassword(TestConstantsUser.USER.getPassword());
-        userDto.setRoles(new HashSet<>(List.of(Role.USER, Role.ADMIN)));
+        userDto.setRoles(new HashSet<>(List.of(Role.USER)));
 
+        // Проверяем, что пользователь сохранен
         Mono<String> result = userService.createUser(userDto);
 
         StepVerifier.create(result)
@@ -70,7 +72,7 @@ class UserServiceTest extends PostgresTestContainer {
 
     @Test
     void testFindByLogin() {
-        // Сначала создаем пользователя
+        // Cоздаем пользователя
         UserDto userDto = new UserDto();
         userDto.setFirstName(TestConstantsUser.USER.getFirstName());
         userDto.setLastName(TestConstantsUser.USER.getLastName());
@@ -80,12 +82,12 @@ class UserServiceTest extends PostgresTestContainer {
         userDto.setPassportNumber(TestConstantsUser.USER.getPassportNumber());
         userDto.setLogin(TestConstantsUser.USER.getLogin());
         userDto.setPassword(TestConstantsUser.USER.getPassword());
-        userDto.setRoles(new HashSet<>(List.of(Role.USER, Role.ADMIN)));
+        userDto.setRoles(new HashSet<>(List.of(Role.USER)));
 
-        // Создаем пользователя
+        // Сохраняем пользователя
         userService.createUser(userDto).block();
 
-        // Теперь ищем пользователя по логину
+        // Ищем пользователя по логину
         Mono<UserProjection> result = userService.findByLogin(TestConstantsUser.LOGIN_NAME);
 
         StepVerifier.create(result)
@@ -98,7 +100,7 @@ class UserServiceTest extends PostgresTestContainer {
 
     @Test
     void testGetUserRequisitesById() {
-        // Сначала создаем пользователя
+        // Создаем пользователя
         UserDto userDto = new UserDto();
         userDto.setFirstName(TestConstantsUser.USER.getFirstName());
         userDto.setLastName(TestConstantsUser.USER.getLastName());
@@ -108,18 +110,18 @@ class UserServiceTest extends PostgresTestContainer {
         userDto.setPassportNumber(TestConstantsUser.USER.getPassportNumber());
         userDto.setLogin(TestConstantsUser.USER.getLogin());
         userDto.setPassword(TestConstantsUser.USER.getPassword());
-        userDto.setRoles(new HashSet<>(List.of(Role.USER, Role.ADMIN)));
+        userDto.setRoles(new HashSet<>(List.of(Role.USER)));
 
-        // Создаем пользователя
+        // Сохраняем пользователя
         String userId = userService.createUser(userDto).block();
 
         // Создаем реквизиты для пользователя
         Requisites requisites = TestConstantsRequisites.REQUISITES.toBuilder()
-                .userId(Long.valueOf(userId)) // Устанавливаем ID пользователя
+                .userId(Long.valueOf(userId)) // Устанавливаем ID ранее сохраненного пользователя
                 .build();
         requisitesRepository.save(requisites).block();
 
-        // Теперь получаем реквизиты по ID пользователя
+        // Получаем реквизиты по ID пользователя
         Mono<UserRequisitesProjection> result = userService.getUserRequisitesById(Long.valueOf(userId));
 
         StepVerifier.create(result)
@@ -142,12 +144,12 @@ class UserServiceTest extends PostgresTestContainer {
         userDto1.setPassportNumber(TestConstantsUser.USER.getPassportNumber());
         userDto1.setLogin(TestConstantsUser.USER.getLogin());
         userDto1.setPassword(TestConstantsUser.USER.getPassword());
-        userDto1.setRoles(new HashSet<>(List.of(Role.USER, Role.ADMIN)));
+        userDto1.setRoles(new HashSet<>(List.of(Role.USER)));
 
-        // Создаем первого пользователя
+        // Сохраняем первого пользователя
         userService.createUser(userDto1).block();
 
-        // Пытаемся создать второго пользователя с тем же ИНН
+        // Создать второго пользователя с тем же ИНН
         UserDto userDto2 = new UserDto();
         userDto2.setFirstName("Дмитрий");
         userDto2.setLastName("Сидоров");
@@ -159,11 +161,12 @@ class UserServiceTest extends PostgresTestContainer {
         userDto2.setPassword("password2");
         userDto2.setRoles(new HashSet<>(List.of(Role.USER)));
 
+        // Сохраняем второго пользователя
         Mono<String> result = userService.createUser(userDto2);
 
+        // Проверяем, что возвращается ID первого пользовате, т.к. у него такой же ИНН
         StepVerifier.create(result)
                 .expectNextMatches(existingUserId -> {
-                    // Проверяем, что возвращается ID уже существующего пользователя
                     assertThat(existingUserId).isNotNull();
                     return true;
                 })
