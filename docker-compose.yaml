@@ -20,6 +20,12 @@ services:
       - "8084:8080"
     environment:
       DYNAMIC_CONFIG_ENABLED: true
+      KAFKA_CLUSTERS_0_NAME: kraft-cluster
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-1:9092,kafka-2:9092,kafka-3:9092
+    depends_on:
+      - kafka-1
+      - kafka-2
+      - kafka-3
 
   # Используется KRaft-режим(вместо ZooKeeper), кластер из трёх брокеров
   kafka-1:
