@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService, ReactiveUserDetailsService 
                         "Реквизиты счета не найдены по id пользователя: " + userId)));
     }
 
-    //    @Transactional
+    @Transactional
     @Loggable
     @Override
     public Mono<String> createUser(UserDto userDto) {
