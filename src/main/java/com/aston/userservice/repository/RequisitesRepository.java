@@ -2,7 +2,6 @@ package com.aston.userservice.repository;
 
 import com.aston.userservice.domain.dto.RequisitesResponseDto;
 import com.aston.userservice.domain.entity.Requisites;
-import com.aston.userservice.domain.projection.UserRequisitesProjection;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
 import org.springframework.stereotype.Repository;
@@ -19,7 +18,7 @@ public interface RequisitesRepository extends R2dbcRepository<Requisites, UUID> 
      * @param userId Id пользователя
      * @return Информацию о счете {@link RequisitesResponseDto}
      */
-    @Query("SELECT u.first_name, r.account_number, r.kbk " +
-            "FROM requisites r INNER JOIN users u ON r.user_id = u.id WHERE u.id = :userId")
+    @Query("SELECT u.first_name, r.account_number, r.kbk FROM requisites r INNER JOIN users u ON " +
+            "r.user_id = u.id WHERE u.id = :userId")
     Mono<RequisitesResponseDto> findByUserId(Long userId);
 }

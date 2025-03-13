@@ -15,5 +15,4 @@ public class RequisitesResponseDto {
     private String firstName;
     private String accountNumber;
     private String kbk;
-
 }

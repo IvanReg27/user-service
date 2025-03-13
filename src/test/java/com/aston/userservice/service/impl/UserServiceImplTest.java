@@ -4,7 +4,6 @@ import com.aston.userservice.domain.dto.RequisitesResponseDto;
 import com.aston.userservice.domain.dto.UserResponseDto;
 import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.projection.UserProjection;
-import com.aston.userservice.domain.projection.UserRequisitesProjection;
 import com.aston.userservice.exception.RequisitesNotFoundException;
 import com.aston.userservice.exception.UserNotFoundException;
 import com.aston.userservice.repository.RequisitesRepository;

@@ -42,13 +42,12 @@ public class UserServiceImpl implements UserService, ReactiveUserDetailsService 
     private final PasswordEncoder passwordEncoder;
     private final UserRoleRepository userRoleRepository;
 
-    private final DatabaseClient client;
-
     @Loggable
     @Override
     public Mono<UserProjection> findByLogin(String login) {
         return userRepository.findByLogin(login)
-                .switchIfEmpty(Mono.error(new UserNotFoundException("Пользователь не найден по логину: " + login)));
+                .switchIfEmpty(Mono.error(new UserNotFoundException(
+                        "Пользователь не найден по логину: " + login)));
     }
 
     @Loggable
@@ -67,7 +66,8 @@ public class UserServiceImpl implements UserService, ReactiveUserDetailsService 
         return userRepository.findByInn(userResponseDto.getInn())
                 .flatMap(existingUser -> {
                     // Если пользователь с таким ИНН уже существует, возвращаем его ID
-                    log.info("Пользователь с ИНН {} уже существует. Возвращаем существующий ID: {}", userResponseDto.getInn(), existingUser.getId());
+                    log.info("Пользователь с ИНН {} уже существует. Возвращаем существующий ID: {}",
+                            userResponseDto.getInn(), existingUser.getId());
                     return Mono.just(existingUser.getId().toString());
                 })
                 .switchIfEmpty(Mono.defer(() -> {
@@ -133,7 +133,8 @@ public class UserServiceImpl implements UserService, ReactiveUserDetailsService 
     @Override
     public Mono<UserDetails> findByUsername(String username) {
         return userRepository.findByLogin(username)
-                .switchIfEmpty(Mono.error(new UserNotFoundException("Пользователь не найден: " + username)))
+                .switchIfEmpty(Mono.error(new UserNotFoundException("Пользователь не найден: "
+                        + username)))
                 .map(user -> new org.springframework.security.core.userdetails.User(
                         user.getLogin(),
                         user.getPassword(),
