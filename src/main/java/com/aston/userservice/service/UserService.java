@@ -1,12 +1,10 @@
 package com.aston.userservice.service;
 
-import com.aston.userservice.domain.dto.UserDto;
+import com.aston.userservice.domain.dto.RequisitesResponseDto;
+import com.aston.userservice.domain.dto.UserResponseDto;
 import com.aston.userservice.domain.projection.UserProjection;
-import com.aston.userservice.domain.projection.UserRequisitesProjection;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-
-import java.util.UUID;
 
 /**
  * Интерфейс для работы с пользователем
@@ -27,15 +25,15 @@ public interface UserService {
      * @param userId userId пользователя
      * @return реквизиты
      */
-    Mono<UserRequisitesProjection> getUserRequisitesById(Long userId);
+    Mono<RequisitesResponseDto> getUserRequisitesById(Long userId);
 
     /**
      * Метод для сохранения пользователя в системе
      *
-     * @param userDto пользователь системы
+     * @param userResponseDto пользователь системы
      * @return пользователь
      */
-    Mono<String> createUser(UserDto userDto);
+    Mono<String> createUser(UserResponseDto userResponseDto);
 
     /**
      * Метод для получения списка всех пользователей

@@ -1,6 +1,7 @@
 package com.aston.userservice.service.impl;
 
-import com.aston.userservice.domain.dto.UserDto;
+import com.aston.userservice.domain.dto.RequisitesResponseDto;
+import com.aston.userservice.domain.dto.UserResponseDto;
 import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;
@@ -54,19 +55,19 @@ class UserServiceImplTest {
     private UserServiceImpl userService;
 
     private User user;
-    private UserDto userDto;
+    private UserResponseDto userResponseDto;
     private Long userId;
 
     @BeforeEach
     void setUp() {
-        userDto = new UserDto();
-        userDto.setLogin("Boris");
-        userDto.setPassword("password123");
-        userDto.setInn("783456789088");
+        userResponseDto = new UserResponseDto();
+        userResponseDto.setLogin("Boris");
+        userResponseDto.setPassword("password123");
+        userResponseDto.setInn("783456789088");
 
         userId = 1L;
         Role userRole = Role.USER;
-        userDto.setRoles(new HashSet<>(Collections.singletonList(userRole)));
+        userResponseDto.setRoles(new HashSet<>(Collections.singletonList(userRole)));
 
         user = User.builder()
                 .id(userId)
@@ -107,7 +108,7 @@ class UserServiceImplTest {
     // Позитивный сценарий
     @Test
     void getUserRequisitesById_UserHasRequisitesTest() {
-        UserRequisitesProjection requisites = mock(UserRequisitesProjection.class);
+        RequisitesResponseDto requisites = mock(RequisitesResponseDto.class);
         when(requisitesRepository.findByUserId(userId)).thenReturn(Mono.just(requisites));
 
         StepVerifier.create(userService.getUserRequisitesById(userId))
@@ -134,7 +135,7 @@ class UserServiceImplTest {
         when(userRepository.save(any(User.class))).thenReturn(Mono.just(user));
         when(userRoleRepository.saveAll(anyIterable())).thenReturn(Flux.empty());
 
-        StepVerifier.create(userService.createUser(userDto))
+        StepVerifier.create(userService.createUser(userResponseDto))
                 .expectNext(userId.toString())
                 .verifyComplete();
 
@@ -146,7 +147,7 @@ class UserServiceImplTest {
     void createUser_UserAlreadyExistsTest() {
         when(userRepository.findByInn("783456789088")).thenReturn(Mono.just(user));
 
-        StepVerifier.create(userService.createUser(userDto))
+        StepVerifier.create(userService.createUser(userResponseDto))
                 .expectNext(userId.toString())
                 .verifyComplete();
 

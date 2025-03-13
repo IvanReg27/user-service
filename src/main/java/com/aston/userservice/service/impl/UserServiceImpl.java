@@ -1,11 +1,11 @@
 package com.aston.userservice.service.impl;
 
 import com.aston.userservice.annotation.Loggable;
-import com.aston.userservice.domain.dto.UserDto;
+import com.aston.userservice.domain.dto.RequisitesResponseDto;
+import com.aston.userservice.domain.dto.UserResponseDto;
 import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.entity.UserRole;
 import com.aston.userservice.domain.projection.UserProjection;
-import com.aston.userservice.domain.projection.UserRequisitesProjection;
 import com.aston.userservice.exception.RequisitesNotFoundException;
 import com.aston.userservice.exception.UserNotFoundException;
 import com.aston.userservice.repository.RequisitesRepository;
@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.shaded.com.google.protobuf.ServiceException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,6 +42,8 @@ public class UserServiceImpl implements UserService, ReactiveUserDetailsService 
     private final PasswordEncoder passwordEncoder;
     private final UserRoleRepository userRoleRepository;
 
+    private final DatabaseClient client;
+
     @Loggable
     @Override
     public Mono<UserProjection> findByLogin(String login) {
@@ -50,7 +53,7 @@ public class UserServiceImpl implements UserService, ReactiveUserDetailsService 
 
     @Loggable
     @Override
-    public Mono<UserRequisitesProjection> getUserRequisitesById(Long userId) {
+    public Mono<RequisitesResponseDto> getUserRequisitesById(Long userId) {
         return requisitesRepository.findByUserId(userId)
                 .switchIfEmpty(Mono.error(new RequisitesNotFoundException(
                         "Реквизиты счета не найдены по id пользователя: " + userId)));
@@ -59,34 +62,34 @@ public class UserServiceImpl implements UserService, ReactiveUserDetailsService 
     @Transactional
     @Loggable
     @Override
-    public Mono<String> createUser(UserDto userDto) {
+    public Mono<String> createUser(UserResponseDto userResponseDto) {
         // Реализация идемпотентности на уровне БД (перед сохранением в БД, проверяем, существует ли такой ИНН в БД)
-        return userRepository.findByInn(userDto.getInn())
+        return userRepository.findByInn(userResponseDto.getInn())
                 .flatMap(existingUser -> {
                     // Если пользователь с таким ИНН уже существует, возвращаем его ID
-                    log.info("Пользователь с ИНН {} уже существует. Возвращаем существующий ID: {}", userDto.getInn(), existingUser.getId());
+                    log.info("Пользователь с ИНН {} уже существует. Возвращаем существующий ID: {}", userResponseDto.getInn(), existingUser.getId());
                     return Mono.just(existingUser.getId().toString());
                 })
                 .switchIfEmpty(Mono.defer(() -> {
                     // Создаем нового пользователя, если не найдено совпадений по ИНН
                     User userEntity = User.builder()
-                            .firstName(userDto.getFirstName())
-                            .lastName(userDto.getLastName())
-                            .birthday(userDto.getBirthday())
-                            .inn(userDto.getInn())
-                            .snils(userDto.getSnils())
-                            .passportNumber(userDto.getPassportNumber())
-                            .login(userDto.getLogin())
-                            .password(passwordEncoder.encode(userDto.getPassword()))
+                            .firstName(userResponseDto.getFirstName())
+                            .lastName(userResponseDto.getLastName())
+                            .birthday(userResponseDto.getBirthday())
+                            .inn(userResponseDto.getInn())
+                            .snils(userResponseDto.getSnils())
+                            .passportNumber(userResponseDto.getPassportNumber())
+                            .login(userResponseDto.getLogin())
+                            .password(passwordEncoder.encode(userResponseDto.getPassword()))
                             .build();
-                    userEntity.setRoles(userDto.getRoles());
+                    userEntity.setRoles(userResponseDto.getRoles());
 
                     return userRepository.save(userEntity)
                             .flatMap(savedUser -> {
                                 log.info("Пользователь успешно сохранен в БД с id: {}", savedUser.getId());
 
                                 // Преобразуем роли в соответствующие сущности UserRole
-                                List<UserRole> roles = userDto.getRoles().stream()
+                                List<UserRole> roles = userResponseDto.getRoles().stream()
                                         .map(role -> new UserRole(savedUser.getId(), role.name()))
                                         .collect(Collectors.toList());
 
@@ -102,7 +105,7 @@ public class UserServiceImpl implements UserService, ReactiveUserDetailsService 
                 }))
                 .onErrorMap(DataIntegrityViolationException.class, e -> {
                     // Если возникает ошибка при сохранении, например, из-за дублирования данных в БД
-                    log.warn("Попытка создать дубликат пользователя с ИНН {}", userDto.getInn());
+                    log.warn("Попытка создать дубликат пользователя с ИНН {}", userResponseDto.getInn());
                     return new ServiceException("Ошибка при создании нового пользователя", e);
                 })
                 .onErrorResume(e -> {

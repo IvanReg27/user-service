@@ -44,6 +44,7 @@ public class User {
     @Column("role")
     private Set<Role> roles = new HashSet<>();
 
+    // Использован Delombok, с целью исключения поля roles
     User(Long id, String firstName, String lastName, LocalDate birthday, String inn, String snils, String passportNumber, String login, String password) {
         this.id = id;
         this.firstName = firstName;

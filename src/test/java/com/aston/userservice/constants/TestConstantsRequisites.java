@@ -2,8 +2,6 @@ package com.aston.userservice.constants;
 
 import com.aston.userservice.domain.entity.Requisites;
 
-import java.util.UUID;
-
 public class TestConstantsRequisites {
 
     public static final Requisites REQUISITES = Requisites.builder()

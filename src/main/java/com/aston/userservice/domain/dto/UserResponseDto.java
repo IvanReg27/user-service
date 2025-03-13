@@ -15,7 +15,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
-public class UserDto {
+public class UserResponseDto {
     private String firstName;
     private String lastName;
     private LocalDate birthday;
