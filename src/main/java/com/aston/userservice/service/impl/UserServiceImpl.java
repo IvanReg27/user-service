@@ -76,13 +76,18 @@ public class UserServiceImpl implements UserService, ReactiveUserDetailsService 
                     return new ServiceException("Ошибка при создании пользователя", e);
                 });
     }
+
     private Mono<String> saveNewUser(UserResponseDto userDto) {
         // Создаем нового пользователя, если не найдено совпадений по ИНН
         User user = userMapper.toEntity(userDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
+        // Принудительно добавляем роль "USER", игнорируя роли из запроса клиента
+        List<String> roles = new ArrayList<>();
+        roles.add("USER");
+
         return userRepository.save(user)
-                .flatMap(savedUser -> saveUserRoles(savedUser, new ArrayList<>(userDto.getRoles()))
+                .flatMap(savedUser -> saveUserRoles(savedUser, roles)
                         .thenReturn(savedUser.getId().toString())
                         .doOnSuccess(id -> {
                             log.info("Пользователь сохранен в базу данных под id {}", id);
@@ -90,10 +95,11 @@ public class UserServiceImpl implements UserService, ReactiveUserDetailsService 
                         })
                 );
     }
-    private Mono<Void> saveUserRoles(User savedUser, List<Role> roles) {
+
+    private Mono<Void> saveUserRoles(User savedUser, List<String> roles) {
         // Преобразуем роль(и) в соответствующую сущность UserRoles
         List<UserRoles> userRoles = roles.stream()
-                .map(role -> new UserRoles(savedUser.getId(), role.name()))
+                .map(role -> new UserRoles(savedUser.getId(), role))
                 .collect(Collectors.toList());
 
         return userRoleRepository.saveAll(userRoles).then();

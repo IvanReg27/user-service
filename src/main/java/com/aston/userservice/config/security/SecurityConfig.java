@@ -29,9 +29,9 @@ public class SecurityConfig {
                 .authenticationManager(customAuthenticationManager)
                 .authorizeExchange(auth -> auth
                         .pathMatchers(HttpMethod.POST, "/user-service/user").permitAll()
-                        .pathMatchers(HttpMethod.POST, "/user-service/user/**").permitAll()
+                        .pathMatchers(HttpMethod.POST, "/user-service/user/**").authenticated()
                         .pathMatchers("/auth/**").permitAll()
-                        .anyExchange().permitAll()
+                        .anyExchange().authenticated()
                 )
                 .addFilterAt(jwtAuthFilter, SecurityWebFiltersOrder.AUTHENTICATION)
                 .build();
