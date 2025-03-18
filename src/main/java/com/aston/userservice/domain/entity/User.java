@@ -42,7 +42,7 @@ public class User {
     private String password;
     @Transient
     @Column("role")
-    private Set<Role> roles = new HashSet<>();
+    private Set<Role> roles;
 
     // Использован Delombok, с целью исключения поля roles, т.к. WebFlux
     User(Long id, String firstName, String lastName, LocalDate birthday, String inn, String snils, String passportNumber, String login, String password) {
