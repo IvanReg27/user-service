@@ -5,12 +5,14 @@ import com.aston.userservice.domain.dto.RequisitesResponseDto;
 import com.aston.userservice.domain.dto.UserResponseDto;
 import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.entity.UserRoles;
+import com.aston.userservice.domain.mapper.UserMapper;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.exception.RequisitesNotFoundException;
 import com.aston.userservice.exception.UserNotFoundException;
 import com.aston.userservice.repository.RequisitesRepository;
 import com.aston.userservice.repository.UserRepository;
 import com.aston.userservice.repository.UserRoleRepository;
+import com.aston.userservice.security.Role;
 import com.aston.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,6 +43,7 @@ public class UserServiceImpl implements UserService, ReactiveUserDetailsService 
     private final KafkaProducerServiceImpl kafkaProducerServiceImpl;
     private final PasswordEncoder passwordEncoder;
     private final UserRoleRepository userRoleRepository;
+    private final UserMapper userMapper;
 
     @Loggable
     @Override
@@ -60,58 +64,39 @@ public class UserServiceImpl implements UserService, ReactiveUserDetailsService 
     @Transactional
     @Loggable
     @Override
-    public Mono<String> createUser(UserResponseDto userResponseDto) {
+    public Mono<String> createUser(UserResponseDto userDto) {
         // Реализация идемпотентности на уровне БД (перед сохранением в БД, проверяем, существует ли такой ИНН в БД)
-        return userRepository.findByInn(userResponseDto.getInn())
-                .flatMap(existingUser -> {
-                    // Если пользователь с таким ИНН уже существует, возвращаем его ID
-                    log.info("Пользователь с ИНН {} уже существует. Возвращаем существующий ID: {}",
-                            userResponseDto.getInn(), existingUser.getId());
-                    return Mono.just(existingUser.getId().toString());
-                })
-                .switchIfEmpty(Mono.defer(() -> {
-                    // Создаем нового пользователя, если не найдено совпадений по ИНН
-                    User userEntity = User.builder()
-                            .firstName(userResponseDto.getFirstName())
-                            .lastName(userResponseDto.getLastName())
-                            .birthday(userResponseDto.getBirthday())
-                            .inn(userResponseDto.getInn())
-                            .snils(userResponseDto.getSnils())
-                            .passportNumber(userResponseDto.getPassportNumber())
-                            .login(userResponseDto.getLogin())
-                            .password(passwordEncoder.encode(userResponseDto.getPassword()))
-                            .build();
-                    userEntity.setRoles(userResponseDto.getRoles());
-
-                    return userRepository.save(userEntity)
-                            .flatMap(savedUser -> {
-                                log.info("Пользователь успешно сохранен в БД с id: {}", savedUser.getId());
-
-                                // Преобразуем роли в соответствующие сущности UserRole
-                                List<UserRoles> roles = userResponseDto.getRoles().stream()
-                                        .map(role -> new UserRoles(savedUser.getId(), role.name()))
-                                        .collect(Collectors.toList());
-
-                                // Сохраняем роли пользователя в базе данных
-                                return userRoleRepository.saveAll(roles)
-                                        .then(Mono.defer(() -> {
-                                            // После успешного сохранения пользователя и его ролей, отправляем событие в Kafka
-                                            kafkaProducerServiceImpl.sendUserCreatedEvent(savedUser);
-                                            log.info("Событие о создании нового пользователя c id: {} отправлено в Kafka", savedUser.getId());
-                                            return Mono.just(savedUser.getId().toString());
-                                        }));
-                            });
-                }))
+        return userRepository.findByInn(userDto.getInn())
+                .map(User::getId)
+                .map(Object::toString)
+                .doOnNext(id -> log.info("Пользователь с ИНН {} уже существует. ID: {}", userDto.getInn(), id))
+                .switchIfEmpty(saveNewUser(userDto))
                 .onErrorMap(DataIntegrityViolationException.class, e -> {
-                    // Если возникает ошибка при сохранении, например, из-за дублирования данных в БД
-                    log.warn("Попытка создать дубликат пользователя с ИНН {}", userResponseDto.getInn());
-                    return new ServiceException("Ошибка при создании нового пользователя", e);
-                })
-                .onErrorResume(e -> {
-                    // Логируем и возвращаем ошибку, если возникла другая непредвиденная ошибка
-                    log.error("Ошибка при создании пользователя: {}", e.getMessage());
-                    return Mono.error(new ServiceException("Неизвестная ошибка при создании пользователя", e));
+                    log.warn("Попытка создать дубликат пользователя с ИНН {}", userDto.getInn());
+                    return new ServiceException("Ошибка при создании пользователя", e);
                 });
+    }
+    private Mono<String> saveNewUser(UserResponseDto userDto) {
+        // Создаем нового пользователя, если не найдено совпадений по ИНН
+        User user = userMapper.toEntity(userDto);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        return userRepository.save(user)
+                .flatMap(savedUser -> saveUserRoles(savedUser, new ArrayList<>(userDto.getRoles()))
+                        .thenReturn(savedUser.getId().toString())
+                        .doOnSuccess(id -> {
+                            log.info("Пользователь сохранен в базу данных под id {}", id);
+                            kafkaProducerServiceImpl.sendUserCreatedEvent(savedUser);
+                        })
+                );
+    }
+    private Mono<Void> saveUserRoles(User savedUser, List<Role> roles) {
+        // Преобразуем роль(и) в соответствующую сущность UserRoles
+        List<UserRoles> userRoles = roles.stream()
+                .map(role -> new UserRoles(savedUser.getId(), role.name()))
+                .collect(Collectors.toList());
+
+        return userRoleRepository.saveAll(userRoles).then();
     }
 
     @Loggable
