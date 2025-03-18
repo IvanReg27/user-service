@@ -4,7 +4,7 @@ import com.aston.userservice.annotation.Loggable;
 import com.aston.userservice.domain.dto.RequisitesResponseDto;
 import com.aston.userservice.domain.dto.UserResponseDto;
 import com.aston.userservice.domain.entity.User;
-import com.aston.userservice.domain.entity.UserRole;
+import com.aston.userservice.domain.entity.UserRoles;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.exception.RequisitesNotFoundException;
 import com.aston.userservice.exception.UserNotFoundException;
@@ -16,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.shaded.com.google.protobuf.ServiceException;
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.security.core.userdetails.ReactiveUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -89,8 +88,8 @@ public class UserServiceImpl implements UserService, ReactiveUserDetailsService 
                                 log.info("Пользователь успешно сохранен в БД с id: {}", savedUser.getId());
 
                                 // Преобразуем роли в соответствующие сущности UserRole
-                                List<UserRole> roles = userResponseDto.getRoles().stream()
-                                        .map(role -> new UserRole(savedUser.getId(), role.name()))
+                                List<UserRoles> roles = userResponseDto.getRoles().stream()
+                                        .map(role -> new UserRoles(savedUser.getId(), role.name()))
                                         .collect(Collectors.toList());
 
                                 // Сохраняем роли пользователя в базе данных

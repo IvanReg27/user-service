@@ -14,7 +14,7 @@ import org.springframework.data.relational.core.mapping.Table;
 @Getter
 @Setter
 @Builder
-public class UserRole {
+public class UserRoles {
 
     @Column("user_id")
     private Long userId;

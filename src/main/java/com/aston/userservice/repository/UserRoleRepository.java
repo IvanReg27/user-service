@@ -1,6 +1,6 @@
 package com.aston.userservice.repository;
 
-import com.aston.userservice.domain.entity.UserRole;
+import com.aston.userservice.domain.entity.UserRoles;
 import org.springframework.data.r2dbc.repository.Modifying;
 import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.R2dbcRepository;
@@ -9,7 +9,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Repository
-public interface UserRoleRepository extends R2dbcRepository<UserRole, Long> {
+public interface UserRoleRepository extends R2dbcRepository<UserRoles, Long> {
 
     @Query("SELECT role FROM user_roles WHERE user_id = :userId")
     Flux<String> findRolesByUserId(Long userId);
