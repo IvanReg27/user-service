@@ -12,7 +12,6 @@ import com.aston.userservice.exception.UserNotFoundException;
 import com.aston.userservice.repository.RequisitesRepository;
 import com.aston.userservice.repository.UserRepository;
 import com.aston.userservice.repository.UserRoleRepository;
-import com.aston.userservice.security.Role;
 import com.aston.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
