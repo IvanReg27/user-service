@@ -13,6 +13,7 @@ import com.aston.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -119,6 +120,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Loggable
+    @Cacheable(value = "userCache")
     @Override
     public List<UserProjection> findAllUsers() {
         List<UserProjection> users = userRepository.findAllBy();

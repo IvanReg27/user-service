@@ -12,6 +12,13 @@ services:
     ports:
       - "5434:5432"
 
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
   # Используется KRaft-режим(вместо ZooKeeper), кластер из трёх брокеров
   kafka-1:
     image: confluentinc/cp-kafka:7.8.0
@@ -84,3 +91,4 @@ volumes:
   kafka1_data:
   kafka2_data:
   kafka3_data:
+  redis_data:
