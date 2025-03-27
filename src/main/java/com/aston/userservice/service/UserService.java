@@ -4,6 +4,7 @@ import com.aston.userservice.domain.dto.UserDto;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -40,5 +41,5 @@ public interface UserService {
      *
      * @return список всех пользователей
      */
-    UserProjection findAllUsers(UUID id);
+    List<UserProjection> findAllUsers();
 }

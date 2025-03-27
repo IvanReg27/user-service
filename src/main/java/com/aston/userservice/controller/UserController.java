@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -51,6 +52,6 @@ public interface UserController {
      *
      * @return список всех пользователей {@link UserProjection}
      */
-    @GetMapping("/user/{login}")
-    public ResponseEntity<UserProjection> getUsers(@PathVariable UUID id);
+    @GetMapping("/users")
+    public ResponseEntity<List<UserProjection>> getUsers();
 }
