@@ -45,4 +45,13 @@ public interface UserController {
      */
     @PostMapping("/user")
     public ResponseEntity<Object> createUser(@RequestBody UserDto userDto);
+
+    /**
+     * Метод для получения всех пользователей
+     *
+     * @param id id пользователей
+     * @return Информацию о пользователях {@link UserProjection}
+     */
+    @GetMapping("/user/{login}")
+    public ResponseEntity<UserProjection> getUsers(@PathVariable UUID id);
 }

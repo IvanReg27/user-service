@@ -117,6 +117,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
     }
 
+    @Override
+    public UserProjection findAllUsers(UUID id) {
+        return userRepository.findAllById(id)
+                .orElseThrow(() -> new UserNotFoundException(
+                        "Пользователи отсутствуют в базе данных"));
+    }
+
     /**
      * Метод для создания объекта(пользователя) по логину для
      * дальнейшего использования объета Spring Security для

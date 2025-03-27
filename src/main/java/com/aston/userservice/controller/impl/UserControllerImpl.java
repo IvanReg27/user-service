@@ -41,4 +41,9 @@ public class UserControllerImpl implements UserController {
         String userId = userService.createUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(userId);
     }
+
+    @Override
+    public ResponseEntity<UserProjection> getUsers(UUID id) {
+        return ResponseEntity.ok(userService.findAllUsers(id));
+    }
 }

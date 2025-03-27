@@ -34,4 +34,12 @@ public interface UserService {
      * @return пользователь
      */
     String createUser(UserDto userDto);
+
+    /**
+     * Метод для получения всех пользователей
+     *
+     * @param id id пользователей
+     * @return пользователи
+     */
+    UserProjection findAllUsers(UUID id);
 }
