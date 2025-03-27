@@ -24,7 +24,7 @@ public interface UserController {
      * Метод для получения информации о пользователе по login
      *
      * @param login login пользователя
-     * @return Информацию о пользователе {@link UserProjection}
+     * @return информацию о пользователе {@link UserProjection}
      */
     @GetMapping("/user/{login}")
     public ResponseEntity<UserProjection> getUser(@PathVariable String login);
@@ -33,7 +33,7 @@ public interface UserController {
      * Метод для получения информации о счете по id пользователя
      *
      * @param id id пользователя
-     * @return Информацию о счете {@link UserRequisitesProjection}
+     * @return информацию о счете {@link UserRequisitesProjection}
      */
     @GetMapping("/requisites/{id}")
     public ResponseEntity<UserRequisitesProjection> getUserRequisites(@PathVariable UUID id);
@@ -47,10 +47,9 @@ public interface UserController {
     public ResponseEntity<Object> createUser(@RequestBody UserDto userDto);
 
     /**
-     * Метод для получения всех пользователей
+     * Метод для получения списка всех пользователей
      *
-     * @param id id пользователей
-     * @return Информацию о пользователях {@link UserProjection}
+     * @return список всех пользователей {@link UserProjection}
      */
     @GetMapping("/user/{login}")
     public ResponseEntity<UserProjection> getUsers(@PathVariable UUID id);

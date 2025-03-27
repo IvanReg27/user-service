@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public UserProjection findAllUsers(UUID id) {
-        return userRepository.findAllById(id)
+        return userRepository.findAllUsersBy()
                 .orElseThrow(() -> new UserNotFoundException(
                         "Пользователи отсутствуют в базе данных"));
     }
