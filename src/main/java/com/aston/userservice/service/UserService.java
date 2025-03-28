@@ -42,4 +42,12 @@ public interface UserService {
      * @return список всех пользователей
      */
     List<UserDto> findAllUsers();
+
+    /**
+     * Метод для удаления пользователя по логину
+     *
+     * @param login login пользователя
+     * @return сообщение об удачном удалении пользователя
+     */
+    void deleteByLogin(String login);
 }

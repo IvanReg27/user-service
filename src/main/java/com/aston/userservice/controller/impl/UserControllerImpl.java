@@ -48,4 +48,11 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity<List<UserDto>> getUsers() {
         return ResponseEntity.ok(userService.findAllUsers());
     }
+
+    @Loggable
+    @Override
+    public ResponseEntity<Void> deleteUser(@PathVariable String login) {
+        userService.deleteByLogin(login);
+        return ResponseEntity.noContent().build();
+    }
 }

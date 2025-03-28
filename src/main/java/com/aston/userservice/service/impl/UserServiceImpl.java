@@ -142,6 +142,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         ).collect(Collectors.toList());
     }
 
+    @Transactional
+    @Loggable
+    @Override
+    public void deleteByLogin(String login) {
+        boolean exists = userRepository.existsByLogin(login);
+        if (!exists) {
+            throw new UserNotFoundException("Пользователь не найден по логину: " + login);
+        }
+        userRepository.deleteByLogin(login);
+    }
+
     /**
      * Метод для создания объекта(пользователя) по логину для
      * дальнейшего использования объета Spring Security для
