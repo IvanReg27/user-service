@@ -41,5 +41,5 @@ public interface UserService {
      *
      * @return список всех пользователей
      */
-    List<UserProjection> findAllUsers();
+    List<UserDto> findAllUsers();
 }

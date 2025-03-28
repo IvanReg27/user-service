@@ -53,5 +53,5 @@ public interface UserController {
      * @return список всех пользователей {@link UserProjection}
      */
     @GetMapping("/users")
-    public ResponseEntity<List<UserProjection>> getUsers();
+    public ResponseEntity<List<UserDto>> getUsers();
 }

@@ -38,5 +38,5 @@ public interface UserRepository extends JpaRepository<User, UUID> {
      *
      * @return список всех пользователей
      */
-    List<UserProjection> findAllBy();
+    List<User> findAllBy();
 }

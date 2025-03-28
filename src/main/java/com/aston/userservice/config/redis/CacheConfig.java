@@ -18,7 +18,7 @@ public class CacheConfig {
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
         RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration.defaultCacheConfig()
                 .entryTtl(Duration.ofMinutes(30)) // Время жизни кеша (30 минут)
-                .disableCachingNullValues(); // Не кешировать null-значения
+                .disableCachingNullValues(); // Не кешировать null значения
 
         return RedisCacheManager.builder(redisConnectionFactory)
                 .cacheDefaults(cacheConfiguration)

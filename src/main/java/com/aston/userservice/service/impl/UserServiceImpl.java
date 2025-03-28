@@ -25,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Класс для работы с пользователем
@@ -120,14 +121,25 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Loggable
-    @Cacheable(value = "userCache")
+    @Cacheable(value = "findAllUsersCache")
     @Override
-    public List<UserProjection> findAllUsers() {
-        List<UserProjection> users = userRepository.findAllBy();
+    public List<UserDto> findAllUsers() {
+        List<User> users = userRepository.findAllBy();
         if (users.isEmpty()) {
             throw new UserNotFoundException("Пользователи отсутствуют в базе данных");
         }
-        return users;
+        return users.stream().map(user -> UserDto.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .birthday(user.getBirthday())
+                .inn(user.getInn())
+                .snils(user.getSnils())
+                .passportNumber(user.getPassportNumber())
+                .login(user.getLogin())
+                .password(user.getPassword())
+                .roles(user.getRoles())
+                .build()
+        ).collect(Collectors.toList());
     }
 
     /**

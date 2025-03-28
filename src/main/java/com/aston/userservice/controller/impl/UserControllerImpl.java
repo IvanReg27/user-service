@@ -45,7 +45,7 @@ public class UserControllerImpl implements UserController {
 
     @Loggable
     @Override
-    public ResponseEntity<List<UserProjection>> getUsers() {
+    public ResponseEntity<List<UserDto>> getUsers() {
         return ResponseEntity.ok(userService.findAllUsers());
     }
 }
