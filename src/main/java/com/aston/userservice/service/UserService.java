@@ -47,7 +47,13 @@ public interface UserService {
      * Метод для удаления пользователя по логину
      *
      * @param login login пользователя
-     * @return сообщение об удачном удалении пользователя
      */
     void deleteByLogin(String login);
+
+    /**
+     * Метод для обновления пользователя по id
+     *
+     * @param userId id пользователя
+     */
+    String updateUser(UUID userId, UserDto userDto);
 }

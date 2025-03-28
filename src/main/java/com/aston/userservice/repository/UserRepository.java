@@ -3,7 +3,6 @@ package com.aston.userservice.repository;
 import com.aston.userservice.domain.entity.User;
 import com.aston.userservice.domain.projection.UserProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -42,10 +41,23 @@ public interface UserRepository extends JpaRepository<User, UUID> {
     List<User> findAllBy();
 
     /**
-     * Метод для удаления пользователя по логину
+     * Метод для проверки наличия логина пользователя в БД
      *
-     * @return сообщение об удачном удалении пользователя
+     * @param login login пользователя
      */
     boolean existsByLogin(String login);
+
+    /**
+     * Метод для удаления пользователя по логину
+     *
+     * @param login login пользователя
+     */
     void deleteByLogin(String login);
+
+    /**
+     * Метод для поиска пользователя по id
+     *
+     * @param userId id пользователя
+     */
+    Optional<User> findById(UUID userId);
 }

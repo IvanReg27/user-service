@@ -153,6 +153,57 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userRepository.deleteByLogin(login);
     }
 
+    @Transactional
+    @Loggable
+    @Override
+    public String updateUser(UUID userId, UserDto userDto) {
+        try {
+            Optional<User> existingUser = userRepository.findById(userId);
+            if (!existingUser.isPresent()) {
+                throw new UserNotFoundException("Пользователь с id " + userId + " не найден");
+            }
+
+            User userEntity = existingUser.get();
+
+            if (userDto.getFirstName() != null) {
+                userEntity.setFirstName(userDto.getFirstName());
+            }
+            if (userDto.getLastName() != null) {
+                userEntity.setLastName(userDto.getLastName());
+            }
+            if (userDto.getBirthday() != null) {
+                userEntity.setBirthday(userDto.getBirthday());
+            }
+            if (userDto.getInn() != null) {
+                userEntity.setInn(userDto.getInn());
+            }
+            if (userDto.getSnils() != null) {
+                userEntity.setSnils(userDto.getSnils());
+            }
+            if (userDto.getPassportNumber() != null) {
+                userEntity.setPassportNumber(userDto.getPassportNumber());
+            }
+            if (userDto.getLogin() != null) {
+                userEntity.setLogin(userDto.getLogin());
+            }
+            if (userDto.getPassword() != null) {
+                userEntity.setPassword(passwordEncoder.encode(userDto.getPassword())); // Если изменился пароль, кешируем его
+            }
+            if (userDto.getRoles() != null) {
+                userEntity.setRoles(userDto.getRoles());
+            }
+
+            userRepository.save(userEntity);
+            log.info("Данные пользователя с id: {} успешно обновлены", userId);
+
+            return userEntity.getId().toString();
+
+        } catch (Exception e) {
+            log.error("Ошибка при обновлении данных пользователя: {}", e.getMessage(), e);
+            throw new ServiceException("Ошибка при обновлении данных пользователя", e);
+        }
+    }
+
     /**
      * Метод для создания объекта(пользователя) по логину для
      * дальнейшего использования объета Spring Security для

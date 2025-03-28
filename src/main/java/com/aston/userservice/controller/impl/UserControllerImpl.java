@@ -55,4 +55,11 @@ public class UserControllerImpl implements UserController {
         userService.deleteByLogin(login);
         return ResponseEntity.noContent().build();
     }
+
+    @Loggable
+    @Override
+    public ResponseEntity<Object> updateUser(@PathVariable UUID userId, @RequestBody UserDto userDto) {
+        String updatedUserId = userService.updateUser(userId, userDto);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedUserId);
+    }
 }
