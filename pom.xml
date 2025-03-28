@@ -47,7 +47,6 @@
 
         <spring-boot-starter-cache.version>3.4.0</spring-boot-starter-cache.version>
         <spring-boot-starter-data-redis.version>3.4.0</spring-boot-starter-data-redis.version>
-        <jackson-databind.version>2.18.3</jackson-databind.version>
 
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -208,11 +207,6 @@
             <version>${spring-boot-starter-data-redis.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>${jackson-databind.version}</version>
-        </dependency>
     </dependencies>
 
     <build>

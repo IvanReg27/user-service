@@ -13,6 +13,8 @@ import com.aston.userservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.service.spi.ServiceException;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -121,7 +123,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Loggable
-    @Cacheable(value = "findAllUsersCache")
+    @Cacheable(value = "users", unless = "#result.isEmpty()") // Кешируем данные
     @Override
     public List<UserDto> findAllUsers() {
         List<User> users = userRepository.findAllBy();
@@ -144,6 +146,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Transactional
     @Loggable
+    @CacheEvict(value = "users", key = "#login") // Кешируем при удалении данных
     @Override
     public void deleteByLogin(String login) {
         boolean exists = userRepository.existsByLogin(login);
@@ -155,6 +158,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Transactional
     @Loggable
+    @CachePut(value = "users", key = "#userId") // Кешируем при обновлении данных
     @Override
     public String updateUser(UUID userId, UserDto userDto) {
         try {
