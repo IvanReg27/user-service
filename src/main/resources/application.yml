@@ -34,10 +34,11 @@ spring:
 
     consumer:
       group-id: user-created-events # Консьюмер ГРУППА
-#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-#      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      #      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      #      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "com.aston.userservice.event"
+
   data:
     redis:
       host: localhost

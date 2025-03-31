@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             log.info("Пользователь успешно сохранен в БД с id: {}", userEntity.getId());
 
             // Создаем событие(сообщение) для Kafka, используя сгенерированный в БД userId
-            kafkaProducerServiceImpl.sendUserCreatedEvent(userEntity);
+//            kafkaProducerServiceImpl.sendUserCreatedEvent(userEntity);
 
             return userEntity.getId().toString();
 
@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Loggable
-    @Cacheable(value = "users", unless = "#result.isEmpty()") // Кешируем данные
+    @Cacheable(value = "users", key = "'all'",unless = "#result.isEmpty()") // Кешируем при чтении данные
     @Override
     public List<UserDto> findAllUsers() {
         List<User> users = userRepository.findAllBy();

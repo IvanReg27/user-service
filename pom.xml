@@ -45,8 +45,8 @@
 
         <spring-kafka.version>3.3.2</spring-kafka.version>
 
-        <spring-boot-starter-cache.version>3.4.0</spring-boot-starter-cache.version>
-        <spring-boot-starter-data-redis.version>3.4.0</spring-boot-starter-data-redis.version>
+        <spring-boot-starter-cache.version>3.4.4</spring-boot-starter-cache.version>
+        <spring-boot-starter-data-redis.version>3.4.4</spring-boot-starter-data-redis.version>
 
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>

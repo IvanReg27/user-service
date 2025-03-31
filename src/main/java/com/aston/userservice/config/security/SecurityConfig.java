@@ -32,9 +32,9 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/user-service/user").permitAll()
-                        .requestMatchers(HttpMethod.POST,"/user-service/user/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/user-service/user/**").permitAll() // После тестирования поменять на .authenticated()
                         .requestMatchers("/auth/**").permitAll()
-                        .anyRequest().permitAll()
+                        .anyRequest().permitAll() // После тестирования поменять на .authenticated()
                 )
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
