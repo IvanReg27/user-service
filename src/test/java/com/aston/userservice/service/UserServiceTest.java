@@ -28,7 +28,7 @@ class UserServiceTest extends PostgresTestContainer {
     private RequisitesRepository requisitesRepository;
 
     @Test
-    void findByLogin() {
+    void findByLoginTest() {
         User savedUser = userRepository.save(TestConstantsUser.USER);
         UserProjection ivan = userService.findByLogin(TestConstantsUser.LOGIN_NAME);
 
@@ -36,7 +36,7 @@ class UserServiceTest extends PostgresTestContainer {
     }
 
     @Test
-    void getUserRequisitesById() {
+    void getUserRequisitesByIdTest() {
         User savedUser = userRepository.save(TestConstantsUser.USER);
         Requisites requisites = TestConstantsRequisites.REQUISITES.toBuilder()
                 .user(savedUser)
@@ -59,7 +59,7 @@ class UserServiceTest extends PostgresTestContainer {
     }
 
     @Test
-    void getUserRequisitesByIdThrowsExceptionIfNotFound() {
+    void getUserRequisitesByIdThrowsExceptionIfNotFoundTest() {
         UUID nonExistentUserId = UUID.randomUUID();
 
         RequisitesNotFoundException exception = Assertions.assertThrows(

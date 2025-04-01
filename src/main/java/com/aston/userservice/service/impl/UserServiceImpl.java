@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             log.info("Пользователь успешно сохранен в БД с id: {}", userEntity.getId());
 
             // Создаем событие(сообщение) для Kafka, используя сгенерированный в БД userId
-//            kafkaProducerServiceImpl.sendUserCreatedEvent(userEntity);
+            kafkaProducerServiceImpl.sendUserCreatedEvent(userEntity);
 
             return userEntity.getId().toString();
 
@@ -123,7 +123,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Loggable
-    @Cacheable(value = "users", key = "'all'",unless = "#result.isEmpty()") // Кешируем при чтении данные
+    @Cacheable(value = "users", key = "'all'", unless = "#result.isEmpty()") // Кешируем при чтении данные
     @Override
     public List<UserDto> findAllUsers() {
         List<User> users = userRepository.findAllBy();
@@ -161,12 +161,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @CachePut(value = "users", key = "#userId") // Кешируем при обновлении данных
     @Override
     public String updateUser(UUID userId, UserDto userDto) {
+        Optional<User> existingUser = userRepository.findById(userId);
+        if (!existingUser.isPresent()) {
+            throw new UserNotFoundException("Пользователь с id " + userId + " не найден");
+        }
         try {
-            Optional<User> existingUser = userRepository.findById(userId);
-            if (!existingUser.isPresent()) {
-                throw new UserNotFoundException("Пользователь с id " + userId + " не найден");
-            }
-
             User userEntity = existingUser.get();
 
             if (userDto.getFirstName() != null) {

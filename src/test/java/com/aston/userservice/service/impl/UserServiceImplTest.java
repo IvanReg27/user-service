@@ -18,6 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -30,6 +31,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.internal.verification.VerificationModeFactory.times;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceImplTest {
@@ -50,6 +52,7 @@ class UserServiceImplTest {
 
     private User user;
     private UserDto userDto;
+    private UserDto newUserDto;
     private UUID userId;
 
     @BeforeEach
@@ -65,6 +68,11 @@ class UserServiceImplTest {
         userDto.setLogin("Boris");
         userDto.setPassword("password123");
         userDto.setInn("783456789088");
+
+        newUserDto = new UserDto();
+        newUserDto.setLogin("NewBoris");
+        newUserDto.setPassword("password456");
+        newUserDto.setInn("783456789099");
     }
 
     // Позитивный сценарий
@@ -83,6 +91,7 @@ class UserServiceImplTest {
     @Test
     void findByLogin_UserNotFoundTest() {
         when(userRepository.findByLogin("unknownBoris")).thenReturn(Optional.empty());
+
         assertThrows(UserNotFoundException.class, () -> userService.findByLogin("unknownBoris"));
     }
 
@@ -91,8 +100,8 @@ class UserServiceImplTest {
     void getUserRequisitesById_UserHasRequisitesTest() {
         UserRequisitesProjection requisites = mock(UserRequisitesProjection.class);
         when(requisitesRepository.findByUserId(userId)).thenReturn(Optional.of(requisites));
-
         UserRequisitesProjection result = userService.getUserRequisitesById(userId);
+
         assertNotNull(result);
     }
 
@@ -100,6 +109,7 @@ class UserServiceImplTest {
     @Test
     void getUserRequisitesById_RequisitesNotFoundTest() {
         when(requisitesRepository.findByUserId(userId)).thenReturn(Optional.empty());
+
         assertThrows(RequisitesNotFoundException.class, () -> userService.getUserRequisitesById(userId));
     }
 
@@ -111,7 +121,9 @@ class UserServiceImplTest {
         when(userRepository.save(any(User.class))).thenReturn(user);
 
         String result = userService.createUser(userDto);
+
         assertEquals(userId.toString(), result);
+
         verify(kafkaProducerServiceImpl).sendUserCreatedEvent(any(User.class));
     }
 
@@ -121,8 +133,88 @@ class UserServiceImplTest {
         when(userRepository.findByInn("783456789088")).thenReturn(Optional.of(user));
 
         String result = userService.createUser(userDto);
+
         assertEquals(userId.toString(), result);
+
         verify(userRepository, never()).save(any(User.class));
+    }
+
+    // Позитивный сценарий
+    @Test
+    void findAllUsers_UsersExistTest() {
+        when(userRepository.findAllBy()).thenReturn(Collections.singletonList(user));
+
+        List<UserDto> result = userService.findAllUsers();
+
+        assertNotNull(result);
+        assertEquals(1, result.size());
+
+        UserDto resultDto = result.get(0);
+
+        assertEquals(user.getLogin(), resultDto.getLogin());
+        assertEquals(user.getPassword(), resultDto.getPassword());
+        assertEquals(user.getInn(), resultDto.getInn());
+    }
+
+    // Негативный сценарий
+    @Test
+    void findAllUsers_UsersNotExistTest() {
+        when(userRepository.findAllBy()).thenReturn(Collections.emptyList());
+
+        assertThrows(UserNotFoundException.class, () -> userService.findAllUsers());
+    }
+
+    // Позитивный сценарий
+    @Test
+    void deleteByLogin_UserExistsTest() {
+        String login = "Boris";
+
+        when(userRepository.existsByLogin(login)).thenReturn(true);
+
+        userService.deleteByLogin(login);
+
+        verify(userRepository, times(1)).deleteByLogin(login);
+    }
+
+    // Негативный сценарий
+    @Test
+    void deleteByLogin_UserNotFoundTest() {
+        String login = "nonBoris";
+
+        when(userRepository.existsByLogin(login)).thenReturn(false);
+
+        assertThrows(UserNotFoundException.class, () -> userService.deleteByLogin(login));
+
+        verify(userRepository, never()).deleteByLogin(anyString());
+    }
+
+    // Позитивный сценарий
+    @Test
+    void updateUser_UserExistsTest() {
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userRepository.save(any(User.class))).thenReturn(user);
+        when(passwordEncoder.encode("password456")).thenReturn("password456");
+
+        String result = userService.updateUser(userId, newUserDto);
+
+        assertEquals(userId.toString(), result);
+        assertEquals("NewBoris", user.getLogin());
+        assertEquals("password456", user.getPassword());
+        assertEquals("783456789099", user.getInn());
+
+        verify(userRepository, times(1)).save(user);
+    }
+
+    @Test
+    void updateUser_UserNotFoundTest() {
+        when(userRepository.findById(userId)).thenReturn(Optional.empty());
+
+        assertThrows(UserNotFoundException.class, () -> {
+            userService.updateUser(userId, newUserDto);
+        }, "Пользователь с id " + userId + " не найден");
+
+        verify(userRepository, never()).save(any(User.class));
+        verify(passwordEncoder, never()).encode(anyString());
     }
 
     // Позитивный сценарий
