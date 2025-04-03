@@ -126,7 +126,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Cacheable(value = "users", key = "'all'", unless = "#result.isEmpty()") // Кешируем при чтении данные
     @Override
     public List<UserDto> findAllUsers() {
-        List<User> users = userRepository.findAllBy();
+        List<User> users = userRepository.findAll();
         if (users.isEmpty()) {
             throw new UserNotFoundException("Пользователи отсутствуют в базе данных");
         }

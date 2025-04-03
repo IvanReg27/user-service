@@ -142,7 +142,7 @@ class UserServiceImplTest {
     // Позитивный сценарий
     @Test
     void findAllUsers_UsersExistTest() {
-        when(userRepository.findAllBy()).thenReturn(Collections.singletonList(user));
+        when(userRepository.findAll()).thenReturn(Collections.singletonList(user));
 
         List<UserDto> result = userService.findAllUsers();
 
@@ -159,7 +159,7 @@ class UserServiceImplTest {
     // Негативный сценарий
     @Test
     void findAllUsers_UsersNotExistTest() {
-        when(userRepository.findAllBy()).thenReturn(Collections.emptyList());
+        when(userRepository.findAll()).thenReturn(Collections.emptyList());
 
         assertThrows(UserNotFoundException.class, () -> userService.findAllUsers());
     }

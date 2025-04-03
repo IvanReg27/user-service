@@ -38,7 +38,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
      *
      * @return список всех пользователей
      */
-    List<User> findAllBy();
+    List<User> findAll();
 
     /**
      * Метод для проверки наличия логина пользователя в БД
