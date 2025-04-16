@@ -27,7 +27,7 @@ spring:
       properties:
         acks: all # Параметр ПОДТВЕРЖДЕНИЯ получения брокером сообщения от продюсера
         delivery.timeout.ms: 10000
-        linger.ms: 0
+        linger.ms: 10
         request.timeout.ms: 5000
         enable.idempotence: true # Параметр для обеспечения ИДЕМПОТЕНСТНОСТИ направления сообщения в брокер
         max.in.flight.requests.per.connection: 5
