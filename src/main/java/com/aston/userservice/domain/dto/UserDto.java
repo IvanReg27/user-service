@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -15,7 +16,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Builder
-public class UserDto {
+public class UserDto implements Serializable {
     private String firstName;
     private String lastName;
     private LocalDate birthday;

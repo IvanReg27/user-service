@@ -4,6 +4,7 @@ import com.aston.userservice.domain.dto.UserDto;
 import com.aston.userservice.domain.projection.UserProjection;
 import com.aston.userservice.domain.projection.UserRequisitesProjection;
 
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -34,4 +35,25 @@ public interface UserService {
      * @return пользователь
      */
     String createUser(UserDto userDto);
+
+    /**
+     * Метод для получения списка всех пользователей
+     *
+     * @return список всех пользователей
+     */
+    List<UserDto> findAllUsers();
+
+    /**
+     * Метод для удаления пользователя по логину
+     *
+     * @param login login пользователя
+     */
+    void deleteByLogin(String login);
+
+    /**
+     * Метод для обновления пользователя по id
+     *
+     * @param userId id пользователя
+     */
+    String updateUser(UUID userId, UserDto userDto);
 }

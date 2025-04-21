@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -40,5 +41,25 @@ public class UserControllerImpl implements UserController {
     public ResponseEntity<Object> createUser(@RequestBody UserDto userDto) {
         String userId = userService.createUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(userId);
+    }
+
+    @Loggable
+    @Override
+    public ResponseEntity<List<UserDto>> getUsers() {
+        return ResponseEntity.ok(userService.findAllUsers());
+    }
+
+    @Loggable
+    @Override
+    public ResponseEntity<Void> deleteUser(@PathVariable String login) {
+        userService.deleteByLogin(login);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Loggable
+    @Override
+    public ResponseEntity<Object> updateUser(@PathVariable UUID userId, @RequestBody UserDto userDto) {
+        String updatedUserId = userService.updateUser(userId, userDto);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedUserId);
     }
 }

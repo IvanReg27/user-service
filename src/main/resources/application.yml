@@ -2,6 +2,9 @@ server:
   port: 8082
 
 spring:
+  cache:
+    type: redis
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -24,17 +27,22 @@ spring:
       properties:
         acks: all # Параметр ПОДТВЕРЖДЕНИЯ получения брокером сообщения от продюсера
         delivery.timeout.ms: 10000
-        linger.ms: 0
+        linger.ms: 10
         request.timeout.ms: 5000
         enable.idempotence: true # Параметр для обеспечения ИДЕМПОТЕНСТНОСТИ направления сообщения в брокер
         max.in.flight.requests.per.connection: 5
 
     consumer:
       group-id: user-created-events # Консьюмер ГРУППА
-#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-#      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      #      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      #      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
         spring.json.trusted.packages: "com.aston.userservice.event"
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
 
 jwt:
   secret: ${JWT_SECRET_KEY:357638792F423F4428472B4B6250655368566D597133743677397A2443264629} # Секрет для генерации JWT токена пользователю

@@ -14,28 +14,43 @@
     <name>user-service</name>
     <description>user-service</description>
     <properties>
+
         <java.version>17</java.version>
+
         <spring-boot-starter-security.version>3.4.2</spring-boot-starter-security.version>
         <jjwt-api.version>0.11.5</jjwt-api.version>
         <jjwt-impl.version>0.11.5</jjwt-impl.version>
         <jjwt-gson.version>0.11.5</jjwt-gson.version>
+
         <springdoc-openapi-starter-webmvc-ui.version>2.2.0</springdoc-openapi-starter-webmvc-ui.version>
+
         <postgresql.version>42.7.4</postgresql.version>
+
         <postgresql-testcontainers.version>1.20.4</postgresql-testcontainers.version>
         <testcontainers-testcontainers.version>1.20.4</testcontainers-testcontainers.version>
         <junit-jupiter-testcontainers.version>1.20.4</junit-jupiter-testcontainers.version>
+
         <liquibase-core.version>4.30.0</liquibase-core.version>
+
         <spring-boot-starter-data-jpa.version>3.4.1</spring-boot-starter-data-jpa.version>
         <spring-boot-testcontainers.version>3.3.4</spring-boot-testcontainers.version>
         <spring-boot-starter-log4j2.version>3.4.1</spring-boot-starter-log4j2.version>
+
         <slf4j-api.version>2.0.16</slf4j-api.version>
         <log4j-slf4j-impl.version>2.24.3</log4j-slf4j-impl.version>
         <log4j-core.version>2.24.3</log4j-core.version>
         <log4j-api.version>2.24.3</log4j-api.version>
+
         <spring-boot-starter-aop.version>3.4.1</spring-boot-starter-aop.version>
+
         <spring-kafka.version>3.3.2</spring-kafka.version>
+
+        <spring-boot-starter-cache.version>3.4.4</spring-boot-starter-cache.version>
+        <spring-boot-starter-data-redis.version>3.4.4</spring-boot-starter-data-redis.version>
+
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+
     </properties>
     <dependencies>
         <dependency>
@@ -53,11 +68,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
 
         <dependency>
@@ -138,12 +148,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-rest</artifactId>
         </dependency>
@@ -190,6 +194,19 @@
             <artifactId>spring-kafka</artifactId>
             <version>${spring-kafka.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+            <version>${spring-boot-starter-cache.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+            <version>${spring-boot-starter-data-redis.version}</version>
+        </dependency>
+
     </dependencies>
 
     <build>
