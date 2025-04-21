@@ -48,6 +48,8 @@
         <spring-boot-starter-cache.version>3.4.4</spring-boot-starter-cache.version>
         <spring-boot-starter-data-redis.version>3.4.4</spring-boot-starter-data-redis.version>
 
+        <spring-boot-starter-data-mongodb.version>3.4.4</spring-boot-starter-data-mongodb.version>
+
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
@@ -205,6 +207,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
             <version>${spring-boot-starter-data-redis.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+            <version>${spring-boot-starter-data-mongodb.version}</version>
         </dependency>
 
     </dependencies>

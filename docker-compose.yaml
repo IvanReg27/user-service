@@ -11,6 +11,8 @@ services:
       POSTGRES_DB: UserDB
     ports:
       - "5434:5432"
+    volumes:
+      - postgres_data:/data
 
   redis:
     image: redis:7.4.2
@@ -19,6 +21,19 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+
+  mongo:
+    image: mongo:6.0
+    container_name: mongo-local
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: UserMongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data
 
   # Используется KRaft-режим(вместо ZooKeeper), кластер из трёх брокеров
   kafka-1:
@@ -89,7 +104,9 @@ networks:
     driver: bridge
 
 volumes:
+  postgres_data:
+  redis_data:
+  mongo_data:
   kafka1_data:
   kafka2_data:
   kafka3_data:
-  redis_data:
