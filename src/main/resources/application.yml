@@ -3,7 +3,8 @@ server:
 
 spring:
   jackson:
-    date-format: dd-MM-yyyy
+    serialization:
+      write-dates-as-timestamps: false
 
   cache:
     type: redis
@@ -48,8 +49,7 @@ spring:
       port: 6379
 
     mongodb:
-      host: localhost
-      port: 27017
+      uri: mongodb://mongo:mongo@localhost:27017/UserMNG?authSource=admin
 
 jwt:
   secret: ${JWT_SECRET_KEY:357638792F423F4428472B4B6250655368566D597133743677397A2443264629} # Секрет для генерации JWT токена пользователю
