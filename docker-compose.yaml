@@ -88,7 +88,7 @@ services:
       KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_CFG_INTER_BROKER_LISTENER_NAME: PLAINTEXT
     volumes:
-      - kafka1_data:/var/lib/kafka/data
+      - kafka2_data:/var/lib/kafka/data
     networks:
       - kafka_network
     ports:
@@ -109,7 +109,7 @@ services:
       KAFKA_CFG_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_CFG_INTER_BROKER_LISTENER_NAME: PLAINTEXT
     volumes:
-      - kafka1_data:/var/lib/kafka/data
+      - kafka3_data:/var/lib/kafka/data
     networks:
       - kafka_network
     ports:
@@ -124,7 +124,7 @@ services:
       - "8084:8080"
     environment:
       KAFKA_CLUSTERS_0_NAME: kraft-cluster
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-1:9092,kafka-2:9094,kafka-3:9096
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-1:9090,kafka-2:9090,kafka-3:9090
       KAFKA_CLUSTERS_0_METRICS_PORT: 9997
     depends_on:
       - kafka-1
