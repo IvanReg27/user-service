@@ -1,7 +1,7 @@
 version: '3.9'
 
 services:
-  postgres:
+  postgresDB:
     image: postgres:15
     container_name: postgres-local
     restart: always
@@ -23,9 +23,9 @@ services:
     volumes:
       - redis_data:/data
 
-  mongo:
+  mongoDB:
     image: mongo:7.0.5
-    container_name: mongo
+    container_name: mongo-local
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongo
@@ -36,7 +36,8 @@ services:
     volumes:
       - mongo_data:/data/db
 
-  mongo-express:
+  # Инструмент для визуального просмотра и управления mongo
+  mongo-ui:
     image: mongo-express
     container_name: mongo-express
     restart: always
