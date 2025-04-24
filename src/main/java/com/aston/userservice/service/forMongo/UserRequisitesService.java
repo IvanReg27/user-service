@@ -29,6 +29,7 @@ public class UserRequisitesService {
         return userRequisitesRepository.save(doc);
     }
 
+    @Loggable
     public UserRequisites updateUserRequisites(String id, UserRequisites updateRequest) {
         return userRequisitesRepository.findById(id).map(existing -> {
             // Добавляем или обновляем счета
@@ -60,11 +61,13 @@ public class UserRequisitesService {
             return userRequisitesRepository.save(existing);
         }).orElseThrow(() -> new UserNotFoundException("Реквизиты пользователь по id " + id + " не найдены"));
     }
+
     @Loggable
     public UserRequisites getUserById(String userId) {
         return userRequisitesRepository.findByUserId(userId)
                 .orElseThrow(() -> new UserNotFoundException("Реквизиты пользователь по userId " + userId + " не найдены"));
     }
+
     @Loggable
     public List<Card> getUserCards(String userId, boolean expiringSoon) {
         UserRequisites userRequisites = userRequisitesRepository.findByUserId(userId)

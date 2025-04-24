@@ -49,6 +49,7 @@
         <spring-boot-starter-data-redis.version>3.4.4</spring-boot-starter-data-redis.version>
 
         <spring-boot-starter-data-mongodb.version>3.4.3</spring-boot-starter-data-mongodb.version>
+        <de.flapdoodle.embed.mongo.version>4.20.0</de.flapdoodle.embed.mongo.version>
 
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -213,6 +214,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
             <version>${spring-boot-starter-data-mongodb.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>de.flapdoodle.embed</groupId>
+            <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <version>${de.flapdoodle.embed.mongo.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
