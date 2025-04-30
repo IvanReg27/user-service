@@ -1,4 +1,4 @@
-package com.aston.userservice.domain.entity.forMongo;
+package com.aston.userservice.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
@@ -9,19 +9,24 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDate;
-import java.util.List;
 
+// Сущность для работы с MongoDB
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
 @Builder(toBuilder = true)
-public class Account {
+public class Card {
     private String id;
     private String number;
-    private double balance;
     @JsonFormat(pattern = "dd-MM-yyyy")
-    private LocalDate openDate;
-    private List<Card> cards;
+    private LocalDate expirationDate;
+    @JsonFormat(pattern = "dd-MM-yyyy")
+    private LocalDate issueDate;
+    private CardType type;
+
+    public enum CardType {
+        DEBIT, CREDIT
+    }
 }

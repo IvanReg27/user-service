@@ -29,7 +29,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Класс сущность, соответствующий таблице User в UserDB
+ * Класс сущность, соответствующий таблице User в UserDB (PostgreSQL)
  */
 @Entity
 @Table(name = "users", uniqueConstraints = @UniqueConstraint(columnNames = "inn"))

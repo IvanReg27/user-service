@@ -1,10 +1,10 @@
-package com.aston.userservice.service.forMongo;
+package com.aston.userservice.service;
 
-import com.aston.userservice.domain.entity.forMongo.Account;
-import com.aston.userservice.domain.entity.forMongo.Card;
-import com.aston.userservice.domain.entity.forMongo.UserRequisites;
+import com.aston.userservice.domain.entity.Account;
+import com.aston.userservice.domain.entity.Card;
+import com.aston.userservice.domain.entity.UserRequisites;
 import com.aston.userservice.exception.UserNotFoundException;
-import com.aston.userservice.repository.forMongo.UserRequisitesRepository;
+import com.aston.userservice.repository.UserRequisitesRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ class UserRequisitesServiceTest {
                         Account.builder()
                                 .id("acc1")
                                 .number("123456789")
-                                .balance(250000.0)
+                                .balance(BigDecimal.valueOf(250000.0))
                                 .openDate(LocalDate.now())
                                 .cards(List.of(
                                         Card.builder()
@@ -82,7 +83,7 @@ class UserRequisitesServiceTest {
                         Account.builder()
                                 .id("newAcc")
                                 .number("999999")
-                                .balance(1500000.0)
+                                .balance(BigDecimal.valueOf(1500000.0))
                                 .openDate(LocalDate.now())
                                 .cards(List.of(
                                         Card.builder()
@@ -142,7 +143,7 @@ class UserRequisitesServiceTest {
         Account account = Account.builder()
                 .id("acc2")
                 .number("555555")
-                .balance(0.0)
+                .balance(BigDecimal.valueOf(0.0))
                 .openDate(now)
                 .cards(cards)
                 .build();

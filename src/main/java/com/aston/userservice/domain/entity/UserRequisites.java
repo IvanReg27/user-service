@@ -1,4 +1,4 @@
-package com.aston.userservice.domain.entity.forMongo;
+package com.aston.userservice.domain.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
+// Сущность для работы с MongoDB
 @Document(collection = "userRequisites")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,7 +23,7 @@ import java.util.List;
 public class UserRequisites {
     @Id
     private String id;
-    @Indexed
+    @Indexed(unique = true)
     private String userId;
     private List<Account> accounts;
 }
