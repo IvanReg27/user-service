@@ -1,8 +1,9 @@
 package com.aston.userservice.service;
 
 import com.aston.userservice.annotation.Loggable;
-import com.aston.userservice.domain.entity.Card;
-import com.aston.userservice.domain.entity.UserRequisites;
+import com.aston.userservice.domain.dto.CardDto;
+import com.aston.userservice.domain.dto.UserRequisitesDto;
+import com.aston.userservice.domain.mapper.UserRequisitesMapper;
 import com.aston.userservice.exception.UserNotFoundException;
 import com.aston.userservice.repository.UserRequisitesRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,60 +20,75 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Slf4j
 public class UserRequisitesService {
+
     private final UserRequisitesRepository userRequisitesRepository;
+    private final UserRequisitesMapper userRequisitesMapper;
 
     @Loggable
-    public UserRequisites saveUser(UserRequisites doc)  {
-        return userRequisitesRepository.save(doc);
+    public UserRequisitesDto saveUser(UserRequisitesDto dto) {
+        var entity = userRequisitesMapper.toEntity(dto);
+        var saved = userRequisitesRepository.save(entity);
+
+        return userRequisitesMapper.toDto(saved);
     }
 
     @Loggable
-    public UserRequisites findById(String id) {
-        return userRequisitesRepository.findById(id)
+    public UserRequisitesDto findById(String id) {
+        var entity = userRequisitesRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException("Реквизиты пользователя по id " + id + " не найдены"));
+
+        return userRequisitesMapper.toDto(entity);
     }
 
     @Loggable
-    public UserRequisites updateUserRequisites(String id, UserRequisites updateRequest) {
-        var userRequisites = findById(id);
-        updateRequest.getAccounts().forEach(
-                account ->
-                        userRequisites.getAccounts().stream()
-                                .filter(oldAccount -> oldAccount.getId().equals(account.getId()))
-                                .findFirst()
-                                .ifPresentOrElse(
-                                        oldAccount -> oldAccount.getCards().addAll(account.getCards()),
-                                        () -> userRequisites.getAccounts().add(account)));
+    public UserRequisitesDto updateUserRequisites(String id, UserRequisitesDto updateDto) {
+        var existingEntity = userRequisitesRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("Реквизиты пользователя по id " + id + " не найдены"));
 
-        return userRequisitesRepository.save(userRequisites);
+        var updateEntity = userRequisitesMapper.toEntity(updateDto);
+
+        updateEntity.getAccounts().forEach(newAccount ->
+                existingEntity.getAccounts().stream()
+                        .filter(oldAccount -> Objects.equals(oldAccount.getNumber(), newAccount.getNumber()))
+                        .findFirst()
+                        .ifPresentOrElse(
+                                oldAccount -> oldAccount.getCards().addAll(newAccount.getCards()),
+                                () -> existingEntity.getAccounts().add(newAccount)
+                        )
+        );
+        var updated = userRequisitesRepository.save(existingEntity);
+
+        return userRequisitesMapper.toDto(updated);
     }
 
     @Loggable
-    public UserRequisites getUserById(String userId) {
-        return userRequisitesRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("Реквизиты пользователь по userId " + userId + " не найдены"));
+    public UserRequisitesDto getUserById(String userId) {
+        var entity = userRequisitesRepository.findByUserId(userId)
+                .orElseThrow(() -> new UserNotFoundException("Реквизиты пользователя по userId " + userId + " не найдены"));
+
+        return userRequisitesMapper.toDto(entity);
     }
 
     @Loggable
-    public List<Card> getUserCards(String userId, boolean expiringSoon) {
-        UserRequisites userRequisites = userRequisitesRepository.findByUserId(userId)
-                .orElseThrow(() -> new UserNotFoundException("Реквизиты пользователь по userId " + userId + " не найдены"));
+    public List<CardDto> getUserCards(String userId, boolean expiringSoon) {
+        var entity = userRequisitesRepository.findByUserId(userId)
+                .orElseThrow(() -> new UserNotFoundException("Реквизиты пользователя по userId " + userId + " не найдены"));
 
-        List<Card> allCards = userRequisites.getAccounts()
-                .stream()
+        List<CardDto> allCards = entity.getAccounts().stream()
                 .filter(Objects::nonNull)
                 .flatMap(account -> account.getCards().stream())
+                .map(userRequisitesMapper::toCardDto)
                 .collect(Collectors.toList());
 
         if (expiringSoon) {
             LocalDate now = LocalDate.now();
-            return allCards
-                    .stream()
+            return allCards.stream()
                     .filter(card -> card.getExpirationDate() != null)
-                    .filter(card -> card.getExpirationDate().isBefore(now) &&
+                    .filter(card -> card.getExpirationDate().isAfter(now) &&
                             card.getExpirationDate().isBefore(now.plusDays(30)))
                     .collect(Collectors.toList());
         }
+
         return allCards;
     }
 }

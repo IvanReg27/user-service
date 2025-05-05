@@ -1,8 +1,8 @@
 package com.aston.userservice.controller;
 
 import com.aston.userservice.annotation.Loggable;
-import com.aston.userservice.domain.entity.Card;
-import com.aston.userservice.domain.entity.UserRequisites;
+import com.aston.userservice.domain.dto.CardDto;
+import com.aston.userservice.domain.dto.UserRequisitesDto;
 import com.aston.userservice.service.UserRequisitesService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,34 +28,38 @@ public class UserRequisitesController {
 
     private final UserRequisitesService userRequisitesService;
 
-    // Эндпоинт для сохранения документа (реквизиты пользователя)
+    // Сохранение нового документа
     @Loggable
     @PostMapping
-    public ResponseEntity<UserRequisites> saveUser(@RequestBody UserRequisites userRequisites) {
-        UserRequisites savedUser = userRequisitesService.saveUser(userRequisites);
+    public ResponseEntity<UserRequisitesDto> saveUser(@RequestBody UserRequisitesDto userRequisitesDto) {
+        UserRequisitesDto savedUser = userRequisitesService.saveUser(userRequisitesDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
-    // Эндпоинт для обновления документа (реквизиты пользователя). С возможностью добавления карт и счетов
+
+    // Обновление документа
     @Loggable
-    @PutMapping("/{id}")
-    public ResponseEntity<UserRequisites> updateUser(@PathVariable String id, @RequestBody UserRequisites updateRequest) {
-        UserRequisites updatedUser = userRequisitesService.updateUserRequisites(id, updateRequest);
+    @PutMapping("/{Id}")
+    public ResponseEntity<UserRequisitesDto> updateUser(@PathVariable String Id,
+                                                        @RequestBody UserRequisitesDto updateRequest) {
+        UserRequisitesDto updatedUser = userRequisitesService.updateUserRequisites(Id, updateRequest);
         return ResponseEntity.ok(updatedUser);
     }
-    // Эндпоинт для получения документа (реквизиты пользователя) по userId
+
+    // Получение документа по userId
     @Loggable
     @GetMapping("/{userId}")
-    public ResponseEntity<UserRequisites> getUserById(@PathVariable String userId) {
-        UserRequisites user = userRequisitesService.getUserById(userId);
+    public ResponseEntity<UserRequisitesDto> getUserById(@PathVariable String userId) {
+        UserRequisitesDto user = userRequisitesService.getUserById(userId);
         return ResponseEntity.ok(user);
     }
-    // Эндпоинт для получения карт пользователя по его userId. Установлен фильтр на карты
-    // (срок действия которых истекает менее чем через 30 дней) или получаем весь список карт
+
+    // Получение списка карт документа
     @Loggable
     @GetMapping("/{userId}/cards")
-    public ResponseEntity<List<Card>> getUserCards(@PathVariable String userId,
-                                                   @RequestParam(value = "expiringSoon", required = false, defaultValue = "false") boolean expiringSoon) {
-        List<Card> cards = userRequisitesService.getUserCards(userId, expiringSoon);
+    public ResponseEntity<List<CardDto>> getUserCards(
+            @PathVariable String userId,
+            @RequestParam(value = "expiringSoon", required = false, defaultValue = "false") boolean expiringSoon) {
+        List<CardDto> cards = userRequisitesService.getUserCards(userId, expiringSoon);
         return ResponseEntity.ok(cards);
     }
 }

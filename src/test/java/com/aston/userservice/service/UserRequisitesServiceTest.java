@@ -1,5 +1,8 @@
 package com.aston.userservice.service;
 
+import com.aston.userservice.domain.dto.AccountDto;
+import com.aston.userservice.domain.dto.CardDto;
+import com.aston.userservice.domain.dto.UserRequisitesDto;
 import com.aston.userservice.domain.entity.Account;
 import com.aston.userservice.domain.entity.Card;
 import com.aston.userservice.domain.entity.UserRequisites;
@@ -39,18 +42,16 @@ class UserRequisitesServiceTest {
 
     // Позитивные сценарии
     @Test
-    void createUserTest() {
-        UserRequisites user = UserRequisites.builder()
+    void  saveUserTest() {
+        UserRequisitesDto saveUserDto = UserRequisitesDto.builder()
                 .userId("user123")
                 .accounts(List.of(
-                        Account.builder()
-                                .id("acc1")
+                        AccountDto.builder()
                                 .number("123456789")
                                 .balance(BigDecimal.valueOf(250000.0))
                                 .openDate(LocalDate.now())
                                 .cards(List.of(
-                                        Card.builder()
-                                                .id("card1")
+                                        CardDto.builder()
                                                 .number("1111-2222-3333-4444")
                                                 .expirationDate(LocalDate.now().plusYears(2))
                                                 .issueDate(LocalDate.now())
@@ -61,9 +62,9 @@ class UserRequisitesServiceTest {
                 ))
                 .build();
 
-        UserRequisites saved = userRequisitesService.saveUser(user);
+        UserRequisitesDto saved = userRequisitesService.saveUser(saveUserDto);
 
-        assertNotNull(saved.getId());
+        assertNotNull(saved);
         assertEquals("user123", saved.getUserId());
         assertEquals(1, saved.getAccounts().size());
         assertEquals(1, saved.getAccounts().get(0).getCards().size());
@@ -71,23 +72,20 @@ class UserRequisitesServiceTest {
 
     @Test
     void updateUserRequisitesTest() {
-        UserRequisites initial = UserRequisites.builder()
+        UserRequisites initialEntity = UserRequisites.builder()
                 .userId("user456")
                 .accounts(new ArrayList<>())
                 .build();
-        initial = userRequisitesRepository.save(initial);
+        initialEntity = userRequisitesRepository.save(initialEntity);
 
-        // Добавляем счет и карту к ранее созданному пользователю
-        UserRequisites updateRequisites = UserRequisites.builder()
+        UserRequisitesDto updateUserDto = UserRequisitesDto.builder()
                 .accounts(List.of(
-                        Account.builder()
-                                .id("newAcc")
+                        AccountDto.builder()
                                 .number("999999")
                                 .balance(BigDecimal.valueOf(1500000.0))
                                 .openDate(LocalDate.now())
                                 .cards(List.of(
-                                        Card.builder()
-                                                .id("newCard")
+                                        CardDto.builder()
                                                 .number("5555-6666-7777-8888")
                                                 .expirationDate(LocalDate.now().plusMonths(6))
                                                 .issueDate(LocalDate.now())
@@ -98,7 +96,7 @@ class UserRequisitesServiceTest {
                 ))
                 .build();
 
-        UserRequisites updated = userRequisitesService.updateUserRequisites(initial.getId(), updateRequisites);
+        UserRequisitesDto updated = userRequisitesService.updateUserRequisites(initialEntity.getId(), updateUserDto);
 
         assertEquals(1, updated.getAccounts().size());
         assertEquals("999999", updated.getAccounts().get(0).getNumber());
@@ -107,17 +105,17 @@ class UserRequisitesServiceTest {
 
     @Test
     void getUserByIdTest() {
-        UserRequisites userRequisites = UserRequisites.builder()
+        UserRequisites entity = UserRequisites.builder()
                 .userId("user789")
                 .accounts(new ArrayList<>())
                 .build();
 
-        userRequisitesRepository.save(userRequisites);
+        userRequisitesRepository.save(entity);
 
-        UserRequisites found = userRequisitesService.getUserById("user789");
+        UserRequisitesDto foundUserDto = userRequisitesService.getUserById("user789");
 
-        assertNotNull(found);
-        assertEquals("user789", found.getUserId());
+        assertNotNull(foundUserDto);
+        assertEquals("user789", foundUserDto.getUserId());
     }
 
     @Test
@@ -127,7 +125,7 @@ class UserRequisitesServiceTest {
                 Card.builder()
                         .id("1")
                         .number("1111")
-                        .expirationDate(now.minusDays(5))
+                        .expirationDate(now.plusDays(10))
                         .issueDate(now.minusYears(1))
                         .type(Card.CardType.DEBIT)
                         .build(),
@@ -148,14 +146,14 @@ class UserRequisitesServiceTest {
                 .cards(cards)
                 .build();
 
-        UserRequisites userRequisites = UserRequisites.builder()
+        UserRequisites entity = UserRequisites.builder()
                 .userId("expiringUser")
                 .accounts(List.of(account))
                 .build();
 
-        userRequisitesRepository.save(userRequisites);
+        userRequisitesRepository.save(entity);
 
-        List<Card> expiringCard = userRequisitesService.getUserCards("expiringUser", true);
+        List<CardDto> expiringCard = userRequisitesService.getUserCards("expiringUser", true);
 
         assertEquals(1, expiringCard.size());
         assertEquals("1111", expiringCard.get(0).getNumber());
