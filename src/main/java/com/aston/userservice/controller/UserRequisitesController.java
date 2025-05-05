@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-
 // Контроллер для работы с MongoDB
 @RestController
 @RequestMapping("/users")
@@ -31,21 +30,21 @@ public class UserRequisitesController {
 
     // Эндпоинт для сохранения документа (реквизиты пользователя)
     @Loggable
-    @PostMapping("/user")
-    public ResponseEntity<UserRequisites> createUser(@RequestBody UserRequisites userRequisites) {
-        UserRequisites createdUser = userRequisitesService.createUser(userRequisites);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    @PostMapping
+    public ResponseEntity<UserRequisites> saveUser(@RequestBody UserRequisites userRequisites) {
+        UserRequisites savedUser = userRequisitesService.saveUser(userRequisites);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
     // Эндпоинт для обновления документа (реквизиты пользователя). С возможностью добавления карт и счетов
     @Loggable
-    @PutMapping("/user/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<UserRequisites> updateUser(@PathVariable String id, @RequestBody UserRequisites updateRequest) {
         UserRequisites updatedUser = userRequisitesService.updateUserRequisites(id, updateRequest);
         return ResponseEntity.ok(updatedUser);
     }
     // Эндпоинт для получения документа (реквизиты пользователя) по userId
     @Loggable
-    @GetMapping("/user/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<UserRequisites> getUserById(@PathVariable String userId) {
         UserRequisites user = userRequisitesService.getUserById(userId);
         return ResponseEntity.ok(user);
@@ -53,7 +52,7 @@ public class UserRequisitesController {
     // Эндпоинт для получения карт пользователя по его userId. Установлен фильтр на карты
     // (срок действия которых истекает менее чем через 30 дней) или получаем весь список карт
     @Loggable
-    @GetMapping("/user/{userId}/cards")
+    @GetMapping("/{userId}/cards")
     public ResponseEntity<List<Card>> getUserCards(@PathVariable String userId,
                                                    @RequestParam(value = "expiringSoon", required = false, defaultValue = "false") boolean expiringSoon) {
         List<Card> cards = userRequisitesService.getUserCards(userId, expiringSoon);

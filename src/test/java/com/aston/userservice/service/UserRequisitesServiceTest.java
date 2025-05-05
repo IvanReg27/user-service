@@ -61,7 +61,7 @@ class UserRequisitesServiceTest {
                 ))
                 .build();
 
-        UserRequisites saved = userRequisitesService.createUser(user);
+        UserRequisites saved = userRequisitesService.saveUser(user);
 
         assertNotNull(saved.getId());
         assertEquals("user123", saved.getUserId());

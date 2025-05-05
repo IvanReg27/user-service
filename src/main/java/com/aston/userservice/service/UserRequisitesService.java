@@ -1,7 +1,6 @@
 package com.aston.userservice.service;
 
 import com.aston.userservice.annotation.Loggable;
-import com.aston.userservice.domain.entity.Account;
 import com.aston.userservice.domain.entity.Card;
 import com.aston.userservice.domain.entity.UserRequisites;
 import com.aston.userservice.exception.UserNotFoundException;
@@ -11,12 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 // Сервис для работы с MongoDB
 @Service
@@ -26,39 +22,29 @@ public class UserRequisitesService {
     private final UserRequisitesRepository userRequisitesRepository;
 
     @Loggable
-    public UserRequisites createUser(UserRequisites doc)  {
+    public UserRequisites saveUser(UserRequisites doc)  {
         return userRequisitesRepository.save(doc);
     }
 
     @Loggable
+    public UserRequisites findById(String id) {
+        return userRequisitesRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("Реквизиты пользователя по id " + id + " не найдены"));
+    }
+
+    @Loggable
     public UserRequisites updateUserRequisites(String id, UserRequisites updateRequest) {
-        return userRequisitesRepository.findById(id).map(existing -> {
-            if (updateRequest.getAccounts() != null) {
-                // Создаем список счетов, если null
-                if (existing.getAccounts() == null) {
-                    existing.setAccounts(new ArrayList<>());
-                }
-                // Обрабатываем счета через Stream
-                updateRequest.getAccounts().forEach(newAcc -> {
-                    existing.getAccounts()
-                            .stream()
-                            .filter(acc -> acc.getId().equals(newAcc.getId()))
-                            .findFirst()
-                            .ifPresentOrElse(existingAcc -> {
-                                        // Обновляем карты для существующего счета
-                                        if (newAcc.getCards() != null) {
-                                            if (existingAcc.getCards() == null) {
-                                                existingAcc.setCards(new ArrayList<>());
-                                            }
-                                            existingAcc.getCards().addAll(newAcc.getCards());
-                                        }
-                                    },
-                                    () -> existing.getAccounts().add(newAcc)
-                            );
-                });
-            }
-            return userRequisitesRepository.save(existing);
-        }).orElseThrow(() -> new UserNotFoundException("Реквизиты пользователя по id " + id + " не найдены"));
+        var userRequisites = findById(id);
+        updateRequest.getAccounts().forEach(
+                account ->
+                        userRequisites.getAccounts().stream()
+                                .filter(oldAccount -> oldAccount.getId().equals(account.getId()))
+                                .findFirst()
+                                .ifPresentOrElse(
+                                        oldAccount -> oldAccount.getCards().addAll(account.getCards()),
+                                        () -> userRequisites.getAccounts().add(account)));
+
+        return userRequisitesRepository.save(userRequisites);
     }
 
     @Loggable
@@ -75,7 +61,7 @@ public class UserRequisitesService {
         List<Card> allCards = userRequisites.getAccounts()
                 .stream()
                 .filter(Objects::nonNull)
-                .flatMap(account -> account.getCards() != null ? account.getCards().stream() : Stream.empty())
+                .flatMap(account -> account.getCards().stream())
                 .collect(Collectors.toList());
 
         if (expiringSoon) {
