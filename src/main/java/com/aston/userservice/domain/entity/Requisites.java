@@ -18,7 +18,7 @@ import lombok.ToString;
 import java.util.UUID;
 
 /**
- * Класс сущность, соответствующий таблице Requisites в UserDB
+ * Класс сущность, соответствующий таблице Requisites в UserDB (PostgreSQL)
  */
 @Entity
 @Table(name = "requisites")
