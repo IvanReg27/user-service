@@ -8,7 +8,7 @@
         <version>3.4.2</version>
         <relativePath/>
     </parent>
-    <groupId>com.aston</groupId>
+    <groupId>ru.makhorin</groupId>
     <artifactId>user-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>user-service</name>

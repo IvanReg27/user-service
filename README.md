@@ -1,14 +1,18 @@
-#### HOST: 172.17.1.81
-#### PORT: 9002
+#### HOST: 127.0.0.1
+#### PORT: 8082
 
-## ENDPOINTS
-### Swagger:
-- **GET** /swagger-ui/index.html
-### Images:
-- **GET**  /frontend-practice/images
-- **POST** /frontend-practice/images
-### Auth:
-- **POST** /frontend-practice/auth/login
-- **POST** /frontend-practice/auth/refresh
-### WebSocket:
-  - **ws** /frontend-practice/websocket
+## В данном учебном проекте необходимо реализовать такие задачи(инструменты) как:
+
+### 1. DAO слой;
+### 2. реализовать миграцию БД (PostgreSQL) Liquibase;
+### 3. создание REST эндпоинта;
+### 4. настройка логгирования, стек log4j + sl4j;
+### 5. настройка Kafka producer и Kafka consumer
+### 6. создание REST клиента
+### 7. настройка кеширования запросов Redis
+### 8. настройка Spring Security
+### 9. настройка MongoDB
+### 10. реализация ELK стека
+### 11. настройка Kubernetes
+### 12. настройка Jenkins
+### 13. реализовать реактивщину в проекте Spring WebFlux
