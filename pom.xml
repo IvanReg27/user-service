@@ -55,6 +55,8 @@
         <spring-boot-starter-data-mongodb.version>3.4.3</spring-boot-starter-data-mongodb.version>
         <de.flapdoodle.embed.mongo.version>4.20.0</de.flapdoodle.embed.mongo.version>
 
+        <logstash-logback-encoder.version>8.1</logstash-logback-encoder.version>
+
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
 
@@ -248,6 +250,12 @@
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash-logback-encoder.version}</version>
         </dependency>
 
     </dependencies>
