@@ -24,6 +24,11 @@
             </Policies>
             <DefaultRolloverStrategy max="15"/>
         </RollingFile>
+
+        <!-- Аппендер для Logstash и его порта 5000 -->
+        <Socket name="Logstash" host="localhost" port="5000" protocol="tcp">
+            <JsonLayout compact="true" eventEol="true" />
+        </Socket>
     </Appenders>
 
     <Loggers>
@@ -36,6 +41,7 @@
         <Root level="info">
             <AppenderRef ref="Console" />
             <AppenderRef ref="FileLoggerInfo" />
+            <AppenderRef ref="Logstash"/>
         </Root>
     </Loggers>
 </Configuration>

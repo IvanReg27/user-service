@@ -56,6 +56,7 @@
         <de.flapdoodle.embed.mongo.version>4.20.0</de.flapdoodle.embed.mongo.version>
 
         <logstash-logback-encoder.version>8.1</logstash-logback-encoder.version>
+        <log4j2-logstash-layout.version>1.0.5</log4j2-logstash-layout.version>
 
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -256,6 +257,12 @@
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
             <version>${logstash-logback-encoder.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.vlkan.log4j2</groupId>
+            <artifactId>log4j2-logstash-layout</artifactId>
+            <version>${log4j2-logstash-layout.version}</version>
         </dependency>
 
     </dependencies>
