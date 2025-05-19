@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: userservice-deployment
+  name: user-service
 spec:
   replicas: 2
   selector:
@@ -18,9 +18,11 @@ spec:
           ports:
             - containerPort: 8082
           env:
-            - name: SPRING_DATASOURCE_URL
-              value: jdbc:postgresql://postgres-service:5434/UserDB
-            - name: SPRING_DATASOURCE_USERNAME
+            - name: PSQL_DATASOURCE_URL
+              value: postgres-service
+            - name: PSQL_DATASOURCE_USERNAME
               value: postgres
-            - name: SPRING_DATASOURCE_PASSWORD
+            - name: PSQL_DATASOURCE_PASSWORD
               value: postgres
+            - name: JWT_SECRET_KEY
+              value: 357638792F423F4428472B4B6250655368566D597133743677397A2443264629
