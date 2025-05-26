@@ -15,7 +15,8 @@ spec:
       containers:
         - name: user-service
           image: user-service:latest
-          imagePullPolicy: IfNotPresent // чтобы скачать образ с локальной машины, а не из GitHub и др. источников
+          # настройка, чтобы minikube качал с локальной машины, а не из GitHub и др. удаленных источников (IfNotPresent)
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8082
           env:
