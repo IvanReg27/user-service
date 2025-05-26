@@ -33,7 +33,7 @@
 
     <Loggers>
         <!-- Логгер для приложения -->
-        <Logger name="com.aston.userservice" level="debug" additivity="false">
+        <Logger name="ru.makhorin.userservice" level="debug" additivity="false">
             <AppenderRef ref="FileLoggerDebug" />
         </Logger>
 
